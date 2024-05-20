@@ -2,21 +2,16 @@ package com.example.bookapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.ParcelUuid;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
+import com.example.bookapp.adapters.AdapterCategory;
 import com.example.bookapp.databinding.ActivityDashboardAdminBinding;
-import com.example.bookapp.databinding.ActivityLoginBinding;
-import com.example.bookapp.databinding.ActivityMainBinding;
+import com.example.bookapp.models.ModelCategory;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;

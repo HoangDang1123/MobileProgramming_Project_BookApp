@@ -47,7 +47,7 @@ public class PdfAddActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
 
     //arraylist to hold pdf categories
-    private ArrayList<ModelCategory> categoryArrayList;
+    private ArrayList<String> categoryTitleArrayList, categoryIdArrayList;
 
     //uri of picked pdf
     private Uri pdfUri = null;
@@ -104,7 +104,7 @@ public class PdfAddActivity extends AppCompatActivity {
 
     }
 
-    private String title="", description="", category="";
+    private String title="", description="";
 
     private void validateData() {
         //Step 1: Validate data
@@ -113,7 +113,7 @@ public class PdfAddActivity extends AppCompatActivity {
         //get data
         title = binding.titleEt.getText().toString().trim();
         description = binding.descriptionEt.getText().toString().trim();
-        category = binding.categoryTv.getText().toString().trim();
+
 
         //validate data
         if (TextUtils.isEmpty(title)){
@@ -122,7 +122,7 @@ public class PdfAddActivity extends AppCompatActivity {
         else if (TextUtils.isEmpty(description)) {
             Toast.makeText(this,"Enter Description...", Toast.LENGTH_SHORT).show();
         }
-        else if (TextUtils.isEmpty(category)) {
+        else if (TextUtils.isEmpty(selectedCategoryTitle)) {
             Toast.makeText(this, "Pick Category...", Toast.LENGTH_SHORT).show();
         }
         else if (pdfUri  == null) {
@@ -189,7 +189,7 @@ public class PdfAddActivity extends AppCompatActivity {
         hashMap.put("id", ""+timestamp);
         hashMap.put("title", ""+title);
         hashMap.put("description", ""+description);
-        hashMap.put("category", ""+category);
+        hashMap.put("categoryId", ""+selectedCategoryId);
         hashMap.put("url", ""+uploadedPdfUrl);
         hashMap.put("timestamp", timestamp);
 
@@ -218,21 +218,27 @@ public class PdfAddActivity extends AppCompatActivity {
 
     private void loadPdfCategories() {
         Log.d(TAG, "loadPdfCategories: Loading pdf categories...");
-        categoryArrayList = new ArrayList<>();
+        categoryTitleArrayList = new ArrayList<>();
+        categoryIdArrayList = new ArrayList<>();
 
         //db reference to load categories..db> Categories
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference ("Categories");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                categoryArrayList.clear(); //clear before adding data
+                categoryTitleArrayList.clear();
+                categoryIdArrayList.clear();
+                //clear before adding data
                 for (DataSnapshot ds: snapshot.getChildren()){
-                    //get data
-                    ModelCategory model = ds.getValue(ModelCategory.class);
-                    //add to arraylist
-                    categoryArrayList.add(model);
 
-                    Log.d(TAG, "onDataChange: "+model.getCategory());
+                    //get id and title ò category
+                    String categoryId = ""+ds.child("id").getValue();
+                    String categoryTitle = ""+ds.child("category").getValue();
+
+                    //add to respective arraylists
+                    categoryTitleArrayList.add(categoryTitle);
+                    categoryIdArrayList.add(categoryId);
+
                 }
             }
 
@@ -243,14 +249,16 @@ public class PdfAddActivity extends AppCompatActivity {
         });
     }
 
+    //selected category id and category title
+    private String selectedCategoryId, selectedCategoryTitle;
     private void categoryPickDialog() {
         //first we need to get categories from firebase
         Log.d(TAG, "categoryPickDialog: showing category pick dialog");
 
         //get string array of categories from arraylist
-        String[] categoriesArray = new  String[categoryArrayList.size()];
-        for (int i=0; i<categoryArrayList.size(); i++){
-            categoriesArray[i] = categoryArrayList.get(i).getCategory();
+        String[] categoriesArray = new  String[categoryTitleArrayList.size()];
+        for (int i=0; i<categoryTitleArrayList.size(); i++){
+            categoriesArray[i] = categoryTitleArrayList.get(i);
         }
 
         //alert dialog
@@ -261,11 +269,12 @@ public class PdfAddActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         //handle item click
                         // get clicked item from list
-                        String category = categoriesArray[which];
+                        selectedCategoryTitle = categoryTitleArrayList.get(which);
+                        selectedCategoryId = categoryIdArrayList.get(which);
                         //set to category textview
-                        binding.categoryTv.setText(category);
+                        binding.categoryTv.setText(selectedCategoryTitle);
 
-                        Log.d(TAG, "onClick: Selected Category: "+category);
+                        Log.d(TAG, "onClick: Selected Category: "+selectedCategoryId+" "+selectedCategoryTitle);
                     }
                 })
                 .show();
