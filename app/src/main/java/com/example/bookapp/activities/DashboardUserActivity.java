@@ -92,14 +92,14 @@ public class DashboardUserActivity extends AppCompatActivity {
                         ""+modelAll.getUid()
                 ), modelAll.getCategory());
                 viewPagerAdapter.addFragment(BooksUserFragment.newInstance(
-                        ""+modelAll.getId(),
-                        ""+modelAll.getCategory(),
-                        ""+modelAll.getUid()
+                        ""+modelMostViewed.getId(),
+                        ""+modelMostViewed.getCategory(),
+                        ""+modelMostViewed.getUid()
                 ), modelMostViewed.getCategory());
                 viewPagerAdapter.addFragment(BooksUserFragment.newInstance(
-                        ""+modelAll.getId(),
-                        ""+modelAll.getCategory(),
-                        ""+modelAll.getUid()
+                        ""+modelMostDownloaded.getId(),
+                        ""+modelMostDownloaded.getCategory(),
+                        ""+modelMostDownloaded.getUid()
                 ), modelMostDownloaded.getCategory());
                 //refresh list
                 viewPagerAdapter.notifyDataSetChanged();
