@@ -53,7 +53,8 @@ public class DashboardUserActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 firebaseAuth.signOut();
-                checkUser();
+                startActivity(new Intent(DashboardUserActivity.this, MainActivity.class));
+                finish();
             }
         });
 
@@ -111,9 +112,9 @@ public class DashboardUserActivity extends AppCompatActivity {
                     categoryArrayList.add(model);
                     //add data to viewPagerAdapter
                     viewPagerAdapter.addFragment(BooksUserFragment.newInstance(
-                            ""+ modelAll.getId(),
-                            ""+ modelAll.getCategory(),
-                            ""+ modelAll.getUid()), model.getCategory());
+                            ""+ model.getId(),
+                            ""+ model.getCategory(),
+                            ""+ model.getUid()), model.getCategory());
                     //refresh list
                     viewPagerAdapter.notifyDataSetChanged();
                 }
@@ -166,9 +167,8 @@ public class DashboardUserActivity extends AppCompatActivity {
         //get current user
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null) {
-            //not logged in, goto main screen
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
+            //not logged in
+            binding.subTitleTv.setText("Not Logged in");
         } else {
             //logged in, get user info
             String email = firebaseUser.getEmail();
