@@ -300,8 +300,9 @@ public class PdfAddActivity extends AppCompatActivity {
             }
         }
         else {
+            Log.d(TAG,"onActivityResult: cancelled picking pdf");
+            Toast.makeText( this,"cancelled picking pdf", Toast.LENGTH_SHORT).show();
         }
-        Log.d(TAG,"onActivityResult: cancelled picking pdf");
-        Toast.makeText( this,"cancelled picking pdf", Toast.LENGTH_SHORT).show();
+
     }
 }
