@@ -71,7 +71,8 @@ public class AdapterPdfUser extends RecyclerView.Adapter<AdapterPdfUser.HolderPd
         MyApplication.loadPdfFromUrlSinglePage(""+pdfUrl,
                 ""+title,
                 holder.pdfView,
-                holder.progressBar
+                holder.progressBar,
+                null
         );
         MyApplication.loadCategory(
                 ""+categoryId,

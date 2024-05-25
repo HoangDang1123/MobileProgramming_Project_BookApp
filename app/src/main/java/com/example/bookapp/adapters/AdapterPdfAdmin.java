@@ -97,7 +97,8 @@ public class AdapterPdfAdmin extends RecyclerView.Adapter<AdapterPdfAdmin.Holder
                 ""+pdfUrl,
                 ""+title,
                 holder.pdfView,
-                holder.progressBar
+                holder.progressBar,
+                null
         );
         MyApplication.loadPdfSize(
                 ""+pdfUrl,
