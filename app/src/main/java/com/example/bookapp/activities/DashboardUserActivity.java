@@ -1,16 +1,11 @@
-package com.example.bookapp;
+package com.example.bookapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.example.bookapp.databinding.ActivityDashboardAdminBinding;
 import com.example.bookapp.databinding.ActivityDashboardUserBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,6 +30,13 @@ public class DashboardUserActivity extends AppCompatActivity {
             public void onClick(View v) {
                 firebaseAuth.signOut();
                 checkUser();
+            }
+        });
+
+        binding.profileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(DashboardUserActivity.this, ProfileActivity.class));
             }
         });
     }

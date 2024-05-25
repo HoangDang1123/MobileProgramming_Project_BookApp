@@ -1,4 +1,4 @@
-package com.example.bookapp;
+package com.example.bookapp.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -8,15 +8,9 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.bookapp.databinding.ActivityLoginBinding;
-import com.example.bookapp.databinding.ActivityRegisterBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
@@ -56,11 +50,19 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        //handle clicl, begin login
+        //handle click, begin login
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 validateData();
+            }
+        });
+
+        //handle click, open forgot password activity
+        binding.forgotTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
             }
         });
     }
@@ -78,9 +80,6 @@ public class LoginActivity extends AppCompatActivity {
         else if (TextUtils.isEmpty(password)){
             Toast.makeText( this,"Enter password...!", Toast.LENGTH_SHORT).show();
         }
-        else if (TextUtils.isEmpty(password)) {
-            Toast.makeText(this, "Confirm Password...!", Toast.LENGTH_SHORT).show();
-        }
         else{
             loginUser();
         }
@@ -90,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
         //show progress
         progressDialog.setMessage("Logging In...");
         progressDialog.show();
-//Login user
+        //Login user
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override

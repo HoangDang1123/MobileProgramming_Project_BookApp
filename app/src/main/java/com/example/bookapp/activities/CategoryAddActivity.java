@@ -1,22 +1,15 @@
-package com.example.bookapp;
+package com.example.bookapp.activities;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.bookapp.databinding.ActivityCategoryAddBinding;
-import com.example.bookapp.databinding.ActivityDashboardAdminBinding;
-import com.example.bookapp.databinding.ActivityDashboardUserBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +19,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 
 import java.util.HashMap;
-import java.util.Objects;
 
 public class CategoryAddActivity extends AppCompatActivity {
 
