@@ -3,6 +3,7 @@ package com.example.bookapp.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -233,9 +234,10 @@ public class ProfileActivity extends AppCompatActivity {
                         }
 
                         //set number of favorite books
-                        binding.favoriteBookCountTv.setText(" "+pdfArrayList.size());//can't set int/long to textview so concatnate with string
+                        binding.favoriteBookCountTv.setText("" + pdfArrayList.size());//can't set int/long to textview so concatnate with string
                         //setup adapter
-                        adapterPdfFavorite = new AdapterPdfFavorite (ProfileActivity.this, pdfArrayList);
+                        adapterPdfFavorite = new AdapterPdfFavorite(ProfileActivity.this, pdfArrayList);
+                        binding.booksRv.setLayoutManager(new LinearLayoutManager(ProfileActivity.this));
                         //set adapter to recyclerview
                         binding.booksRv.setAdapter(adapterPdfFavorite);
                     }
