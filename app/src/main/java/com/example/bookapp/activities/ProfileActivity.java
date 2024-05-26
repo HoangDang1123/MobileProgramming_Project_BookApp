@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.bookapp.MyApplication;
 import com.example.bookapp.R;
+import com.example.bookapp.adapters.AdapterPdfFavorite;
 import com.example.bookapp.adapters.AdapterPdfUser;
 import com.example.bookapp.databinding.ActivityProfileBinding;
 import com.example.bookapp.models.ModelPdf;
@@ -45,8 +46,7 @@ public class ProfileActivity extends AppCompatActivity {
     //arraylist to hold the books
     private ArrayList<ModelPdf> pdfArrayList;
     //adapter to set in recyclerview
-//    private AdapterPdfFavorite adapterPdfFavorite;
-
+    private AdapterPdfFavorite adapterPdfFavorite;
     //progress dialog
     private ProgressDialog progressDialog;
 
@@ -64,7 +64,7 @@ public class ProfileActivity extends AppCompatActivity {
         binding.favoriteBookCountTv.setText("N/A");
         binding.accountStatusTv.setText("N/A");
 
-        //setup firebae auth
+        //setup firebase auth
         firebaseAuth = FirebaseAuth.getInstance();
         //get current user
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -109,8 +109,6 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void loadFavoriteBooks() {
-    }
 
     private void emailVerificationDialog() {
         //Alert dialog
@@ -166,8 +164,6 @@ public class ProfileActivity extends AppCompatActivity {
             binding.accountStatusTv.setText("Not Verified");
         }
 
-
-
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.child(firebaseAuth.getUid())
                 .addValueEventListener(new ValueEventListener() {
@@ -207,6 +203,46 @@ public class ProfileActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+    }
+
+    private void loadFavoriteBooks() {
+        //init list
+        pdfArrayList = new ArrayList<>();
+
+        //load favorite books from database
+        //Users > userId > Favorites
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.child(firebaseAuth.getUid()).child("Favorites")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        //clear list before starting adding data
+                        pdfArrayList.clear();
+                        for (DataSnapshot ds: snapshot.getChildren()) {
+                            //we will only get the bookId here, and we got other details in adapter using that bookId
+                            String bookId = "" + ds.child("bookId").getValue();
+
+                            //set id to model
+                            ModelPdf modelPdf = new ModelPdf();
+                            modelPdf.setId(bookId);
+
+                            //add model to list
+                            pdfArrayList.add(modelPdf);
+                        }
+
+                        //set number of favorite books
+                        binding.favoriteBookCountTv.setText(" "+pdfArrayList.size());//can't set int/long to textview so concatnate with string
+                        //setup adapter
+                        adapterPdfFavorite = new AdapterPdfFavorite (ProfileActivity.this, pdfArrayList);
+                        //set adapter to recyclerview
+                        binding.booksRv.setAdapter(adapterPdfFavorite);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
     }

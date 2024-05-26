@@ -212,7 +212,7 @@ public class MyApplication extends Application {
                         String category = ""+snapshot.child("category").getValue();
 
                         //set to category text view
-                        categoryTv.setText(categoryId);
+                        categoryTv.setText(category);
                     }
 
                     @Override

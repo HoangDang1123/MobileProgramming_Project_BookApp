@@ -16,13 +16,17 @@ import androidx.core.content.ContextCompat;
 
 import com.example.bookapp.MyApplication;
 import com.example.bookapp.R;
+import com.example.bookapp.adapters.AdapterPdfFavorite;
 import com.example.bookapp.databinding.ActivityPdfDetailBinding;
+import com.example.bookapp.models.ModelPdf;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class PdfDetailActivity extends AppCompatActivity {
 
@@ -43,7 +47,7 @@ public class PdfDetailActivity extends AppCompatActivity {
 
         //get data from intent e.g. bookId
         Intent intent = getIntent();
-        bookId = intent.getStringExtra("bookId");
+        bookId = intent.getStringExtra("bookId"); //requires bookId, so lets pass intent
 
         //at start hide download button, because we need book url that we will load later in function loadBookDetails();
         binding.downloadBookBtn.setVisibility(View.GONE);
@@ -56,6 +60,7 @@ public class PdfDetailActivity extends AppCompatActivity {
         loadBookDetails();
         //increment book view count, whenever this page starts
         MyApplication.incrementBookViewCount(bookId);
+
 
         //handle click, go back
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
@@ -109,6 +114,7 @@ public class PdfDetailActivity extends AppCompatActivity {
             }
         });
     }
+
 
     //request storage permission
     private ActivityResultLauncher<String> requestPermissionLauncher =
