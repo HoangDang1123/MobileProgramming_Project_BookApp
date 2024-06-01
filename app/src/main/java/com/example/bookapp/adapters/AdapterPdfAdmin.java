@@ -31,12 +31,11 @@ public class AdapterPdfAdmin extends RecyclerView.Adapter<AdapterPdfAdmin.Holder
 
     //context
     private Context context;
-    //arraylist to hold list of data of type ModelPdf
+    //Danh sách các tài liệu PDF hiển thị và danh sách các tài liệu PDF dùng để lọc.
     public ArrayList<ModelPdf> pdfArrayList, filterList;
 
     private RowPdfAdminBinding binding;
     private FilterPdfAdmin filter;
-
 
     private static final  String TAG ="PDF_ADAPTER_TAG";
 
@@ -44,7 +43,7 @@ public class AdapterPdfAdmin extends RecyclerView.Adapter<AdapterPdfAdmin.Holder
     private ProgressDialog progressDialog;
 
 
-    //constructor
+    //Constructor để khởi tạo adapter với context và danh sách các tài liệu PDF.
     public AdapterPdfAdmin(Context context, ArrayList<ModelPdf>pdfArrayList){
         this.context = context;
         this.pdfArrayList = pdfArrayList;
@@ -59,7 +58,7 @@ public class AdapterPdfAdmin extends RecyclerView.Adapter<AdapterPdfAdmin.Holder
     @NonNull
     @Override
     public HolderPdfAdmin onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //bind layout using view binding
+        //Liên kết bố cục bằng cách sử dụng liên kết
         binding = RowPdfAdminBinding.inflate(LayoutInflater.from(context), parent, false);
 
         return new HolderPdfAdmin(binding.getRoot());
@@ -87,8 +86,8 @@ public class AdapterPdfAdmin extends RecyclerView.Adapter<AdapterPdfAdmin.Holder
         holder.descriptionTv.setText(description);
         holder.dateTv.setText(formattedDate);
 
-        //we will need these functions many time, so insteady of writing again and again move them to MyApplication class and make static to use later
-        //load further details like category, pdf from url, pdf size in seprate functions
+        //Do chức năng này cần nhiều lần nên thay vì viết đi lại nhiều lần thì em chuyển nó sang lớp MyApplication tạo tĩnh để sử dụng sau này
+        //Tải thêm chi tiết như danh mục, PDF từ URL, kích thước PDF trong các chức năng riêng biệt
         MyApplication.loadCategory(
                 ""+categoryId,
                 holder.categoryTv
@@ -106,7 +105,7 @@ public class AdapterPdfAdmin extends RecyclerView.Adapter<AdapterPdfAdmin.Holder
                 holder.sizeTv
         );
 
-        //handle click, show dialog with options 1) Edit, 2)Delete
+        //xử lí khi click, hiển thị hộp thoại với các tùy chọn 1) Edit, 2)Delete
         holder.moreBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -115,7 +114,7 @@ public class AdapterPdfAdmin extends RecyclerView.Adapter<AdapterPdfAdmin.Holder
             }
         });
 
-        //handle book/pdf click, open pdf details page, pass pdf/book id to get details of it
+        //handle book/khi nhấn pdf , mở trang pdf details, pass pdf/book id to get details of it
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,10 +130,10 @@ public class AdapterPdfAdmin extends RecyclerView.Adapter<AdapterPdfAdmin.Holder
         String bookUrl = model.getUrl();
         String bookTitle = model.getTitle();
 
-        //options to show in dialog
+        //Các tùy chọn để hiển thị trong hộp thoại
         String[] options = {"Edit", "Delete"};
 
-        //alert dialog
+        //Hộp thoại thồn báo
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Choose Options")
                 .setItems(options, new DialogInterface.OnClickListener(){

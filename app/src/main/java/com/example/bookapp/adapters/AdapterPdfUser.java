@@ -30,28 +30,27 @@ public class AdapterPdfUser extends RecyclerView.Adapter<AdapterPdfUser.HolderPd
     public ArrayList<ModelPdf> pdfArrayList, filterList;
     private FilterPdfUser filter;
 
-    private RowPdfAdminBinding binding; //create
+    private RowPdfAdminBinding binding;
     private static final String TAG ="ADAPTER_PDF_USER_TAG";
 
+    // Hàm khởi tạo để khởi tạo adapter với dữ liệu cần thiết
     public AdapterPdfUser(Context context, ArrayList<ModelPdf> pdfArrayList) {
         this.context = context;
         this.pdfArrayList = pdfArrayList;
         this.filterList = pdfArrayList;
     }
 
+    // Tạo một view holder mới cho recycler view
     @NonNull
     @Override
     public HolderPdfUser onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //bind the view
         binding = RowPdfAdminBinding.inflate(LayoutInflater.from(context), parent, false);
         return new HolderPdfUser(binding.getRoot());
     }
 
+    // Gắn dữ liệu vào view holder
     @Override
     public void onBindViewHolder(@NonNull HolderPdfUser holder, int position) {
-        /*Get data, set data, handle click etc */
-
-        //get data
         ModelPdf model = pdfArrayList.get(position);
         String bookId = model.getId();
         String title = model.getTitle();
@@ -60,14 +59,15 @@ public class AdapterPdfUser extends RecyclerView.Adapter<AdapterPdfUser.HolderPd
         String categoryId = model.getCategoryId();
         long timestamp = model.getTimestamp();
 
-        //convert time
+        // Định dạng timestamp thành ngày tháng năm dễ đọc
         String date = MyApplication.formatTimestamp(timestamp);
 
-        //set data
+        // Đặt dữ liệu vào view holder
         holder.titleTv.setText(title);
         holder.descriptionTv.setText(description);
         holder.dateTv.setText(date);
 
+        // Tải PDF và thông tin liên quan
         MyApplication.loadPdfFromUrlSinglePage(""+pdfUrl,
                 ""+title,
                 holder.pdfView,
@@ -84,7 +84,7 @@ public class AdapterPdfUser extends RecyclerView.Adapter<AdapterPdfUser.HolderPd
                 holder.sizeTv
         );
 
-        //handle click, show pdf details activity
+        // Đặt một listener click cho view của item
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,11 +96,13 @@ public class AdapterPdfUser extends RecyclerView.Adapter<AdapterPdfUser.HolderPd
 
     }
 
+    // Lấy tổng số lượng item trong adapter
     @Override
     public int getItemCount() {
-        return pdfArrayList.size(); //return list size || number of records
+        return pdfArrayList.size();
     }
 
+    // Lấy bộ lọc cho adapter
     @Override
     public Filter getFilter() {
         if (filter == null){
@@ -109,6 +111,7 @@ public class AdapterPdfUser extends RecyclerView.Adapter<AdapterPdfUser.HolderPd
         return filter;
     }
 
+    // Lớp view holder cho recycler view
     class HolderPdfUser extends RecyclerView.ViewHolder{
 
         TextView titleTv, descriptionTv, categoryTv, sizeTv, dateTv;
@@ -118,6 +121,7 @@ public class AdapterPdfUser extends RecyclerView.Adapter<AdapterPdfUser.HolderPd
         public HolderPdfUser(@NonNull View itemView) {
             super(itemView);
 
+            // Khởi tạo các tham chiếu đến view
             titleTv = binding.titleTv;
             descriptionTv = binding.descriptionTv;
             categoryTv = binding.categoryTv;

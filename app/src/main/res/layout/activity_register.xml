@@ -7,12 +7,14 @@
     android:background="@drawable/back01"
     tools:context=".activities.LoginActivity">
 
+    <!-- Layout chứa thanh công cụ -->
     <RelativeLayout
         android:id="@+id/toolbarRl"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:background="@drawable/shape_toolbar01">
 
+        <!-- Nút quay lại -->
         <ImageButton
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
@@ -22,6 +24,7 @@
             android:layout_margin="10dp"
             android:padding="5dp"/>
 
+        <!-- Hình ảnh logo-->
         <ImageView
             android:id="@+id/iconIv"
             android:layout_width="110dp"
@@ -29,6 +32,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="40dp"
             android:src="@drawable/logo"/>
+
+        <!-- TextView Tiêu đề -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,13 +57,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!--Name-->
+            <!-- TextInputLayout cho Tên -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/nameTil"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:hintEnabled="false">
 
+                <!-- EditText cho Tên -->
                 <EditText
                     android:id="@+id/nameEt"
                     android:layout_width="match_parent"
@@ -75,7 +81,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-            <!--Email-->
+            <!-- TextInputLayout cho Email -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/emailTil"
                 android:layout_width="match_parent"
@@ -84,6 +90,7 @@
                 android:layout_marginTop="5dp"
                 app:hintEnabled="false">
 
+                <!-- EditText cho Email -->
                 <EditText
                     android:id="@+id/emailEt"
                     android:layout_width="match_parent"
@@ -100,7 +107,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-            <!--Password-->
+            <!-- TextInputLayout cho Mật khẩu -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/passwordTil"
                 android:layout_width="match_parent"
@@ -110,6 +117,7 @@
                 app:passwordToggleEnabled="true"
                 app:hintEnabled="false">
 
+                <!-- EditText cho Mật khẩu -->
                 <EditText
                     android:id="@+id/passwordEt"
                     android:layout_width="match_parent"
@@ -125,7 +133,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--Confirm Password-->
+            <!-- TextInputLayout cho Xác nhận Mật khẩu -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/cPasswordTil"
                 android:layout_width="match_parent"
@@ -135,6 +143,7 @@
                 app:passwordToggleEnabled="true"
                 app:hintEnabled="false">
 
+                <!-- EditText cho Xác nhận Mật khẩu -->
                 <EditText
                     android:id="@+id/cPasswordEt"
                     android:layout_width="match_parent"
@@ -150,7 +159,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--Register Button-->
+            <!-- Nút Đăng ký -->
             <Button
                 android:id="@+id/registerBtn"
                 android:layout_width="match_parent"

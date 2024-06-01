@@ -24,12 +24,16 @@ import java.util.ArrayList;
 
 public class DashboardAdminActivity extends AppCompatActivity {
 
+    //Khai báo biến dùng View Binding
     private ActivityDashboardAdminBinding binding;
 
+    //Khai báo biến Firebase Auth
     private FirebaseAuth firebaseAuth;
 
+    //Khai báo danh sách chứa các đối tượng ModelCategory
     private ArrayList<ModelCategory> categoryArrayList;
 
+    //Khai báo Adapter cho RecyclerView
     private AdapterCategory adapterCategory;
 
     @Override
@@ -38,11 +42,16 @@ public class DashboardAdminActivity extends AppCompatActivity {
         binding = ActivityDashboardAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        //Khởi tạo Firebase Auth
         firebaseAuth = firebaseAuth.getInstance();
+
+        //Kiểm tra người dùng hiện tại
         checkUser();
+
+        //Tải danh mục từ Firebase
         loadCategories();
 
-        //edit text change listern, search
+        // Thiết lập sự kiện cho ô tìm kiếm
         binding.searchEt.addTextChangedListener(new TextWatcher(){
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after){
@@ -64,7 +73,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
             }
 
         });
-        //handle click, logout
+        //Xử lý sự kiện click cho nút đăng xuất
         binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,7 +82,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, start category add screen
+        //Xử lý sự kiện click cho nút
         binding.addCategoryBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -81,7 +90,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, start pdf add screen
+        //Xử lý sự kiện click cho nút thêm PDF
         binding.addPdfFab.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -89,6 +98,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
             }
         });
 
+        //Xử lý sự kiện click cho nút xem hồ sơ
         binding.profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,25 +107,26 @@ public class DashboardAdminActivity extends AppCompatActivity {
         });
     }
 
+    //Phương thức tải danh mục từ Firebase
     private void loadCategories() {
-        //init arraylist
+        //Khởi tạo danh sách danh mục
         categoryArrayList = new ArrayList<>();
 
-        //get all categories from firebase> Categories
+        // Tham chiếu đến nhánh "Categories" trong Firebase
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference( "Categories");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange (@NonNull DataSnapshot snapshot) {
-                //clear arraylist before adding data into it
+                // Xóa danh sách cũ trước khi thêm dữ liệu mới
                 categoryArrayList.clear();
                 for (DataSnapshot ds: snapshot.getChildren()) {
-                    //get data
+                    //Lấy dữ liệu
                     ModelCategory model = ds.getValue(ModelCategory.class);
 
-                    //add to arraylist
+                    //Thêm vào danh sách
                     categoryArrayList.add(model);
                 }
-                //setup adapter
+                //Thiết lập adapter cho RecyclerView
                 adapterCategory = new AdapterCategory(DashboardAdminActivity.this, categoryArrayList);
                 //set adapter to recyclerview
                 binding.categoriesRv.setAdapter(adapterCategory);
@@ -130,17 +141,17 @@ public class DashboardAdminActivity extends AppCompatActivity {
 
     }
 
+    //Phương thức kiểm tra người dùng hiện tại
     private void checkUser() {
-        //get current user
+        //Lấy người dùng hiện tại
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null) {
-            //not logged in, goto main screen
+            // Nếu chưa đăng nhập, chuyển hướng đến màn hình chính
             startActivity(new Intent(this, MainActivity.class));
             finish();
         } else {
-            //logged in, get user info
+            // Nếu đã đăng nhập, lấy email người dùng và hiển thị
             String email = firebaseUser.getEmail();
-            //set in textview of toolbar
             binding.subTitleTv.setText(email);
         }
     }

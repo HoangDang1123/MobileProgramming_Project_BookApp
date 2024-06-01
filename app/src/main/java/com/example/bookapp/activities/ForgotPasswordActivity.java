@@ -16,13 +16,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
-    //View binding
+    // Khai báo biến dùng View Binding
     private ActivityForgotPasswordBinding binding;
 
-    //firebase auth
+    // Khai báo biến Firebase Auth
     private FirebaseAuth firebaseAuth;
 
-    //progress dialog
+    // Khai báo biến Progress Dialog
     private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,22 +30,22 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         binding = ActivityForgotPasswordBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //init Firebase auth
+        // Khởi tạo Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance();
 
-        //init/setup progress dialog
+        // Khởi tạo và thiết lập Progress Dialog
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setCanceledOnTouchOutside(false);
 
-        //handle alick, go back
+        // Xử lý sự kiện click, quay lại màn hình trước
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 onBackPressed();
             }
         });
 
-        //handle click, begin recovery password
+        // Xử lý sự kiện click, bắt đầu quá trình khôi phục mật khẩu
         binding.submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,10 +56,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     private String email = "";
     private void validateData() {
-        //get data i.e. email
+        //Lấy dữ liệu email
         email = binding.emailEt.getText().toString().trim();
 
-        //validate data e.g. shavtan's empty and should be walie farmat
+        //Kiểm rea tính hợp lệ của dữ liệu email
         if (email.isEmpty()) {
             Toast.makeText(this, "Enter Email...", Toast.LENGTH_SHORT).show();
         }
@@ -67,20 +67,22 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             Toast.makeText(this, "Invalid email format...", Toast.LENGTH_SHORT).show();
         }
         else {
+            //Nếu dữ liệu hợp lệ, gọi phương thức recoverPassword để khôi phục mật khẩu
             recoverPassword();
         }
     }
 
     private void recoverPassword() {
-        //show progress
+        //Hiển thị Progress Dialog
         progressDialog.setMessage("Sending password recovery instructions to " + email);
         progressDialog.show();
 
-        //began sending recovery.
+        //Bắt đầu gửi email khôi phục mật khẩu
         firebaseAuth.sendPasswordResetEmail(email)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+                        //Gửi email thành công
                         progressDialog.dismiss();
                         Toast.makeText(ForgotPasswordActivity.this, "Instructions to reset password sent to " + email, Toast.LENGTH_SHORT).show();
                     }
@@ -88,7 +90,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        //failed to send
+                        //Gửi email thất bại
                         progressDialog.dismiss();
                         Toast.makeText(ForgotPasswordActivity.this, "Failed to send due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }

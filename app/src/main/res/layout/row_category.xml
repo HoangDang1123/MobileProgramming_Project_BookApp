@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- CardView để chứa nội dung của một mục danh mục -->
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     app:contentPadding="10dp"
     app:cardUseCompatPadding="true"
     app:cardCornerRadius="8dp"
     app:cardElevation="0dp"
     app:cardBackgroundColor="@color/white">
 
+    <!-- LinearLayout để chứa các thành phần bên trong CardView, sắp xếp theo chiều ngang -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
+        <!-- TextView: Hiển thị tiêu đề của danh mục -->
         <TextView
             android:id="@+id/categoryTv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Category Title"
             android:layout_weight="1"
+            android:text="Category Title"
             android:textColor="@color/black"/>
 
+        <!-- ImageButton: Nút xóa danh mục với hình biểu tượng xóa -->
         <ImageButton
             android:id="@+id/deleteBtn"
             android:layout_width="40dp"

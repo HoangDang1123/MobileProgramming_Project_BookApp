@@ -8,14 +8,14 @@
     android:layout_height="match_parent"
     tools:context=".activities.PdfListAdminActivity">
 
-    <!--Toolbar-->
+    <!-- Toolbar -->
     <RelativeLayout
         android:id="@+id/toolbarRl"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:background="@drawable/shape_toolbar02">
 
-        <!--Back button-->
+        <!-- Nút quay lại -->
         <ImageButton
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
@@ -25,7 +25,7 @@
             android:layout_marginStart="10dp"
             android:background="@android:color/transparent"/>
 
-        <!--Title-->
+        <!-- Tiêu đề -->
         <TextView
             android:id="@+id/titleTv"
             android:layout_width="wrap_content"
@@ -36,7 +36,7 @@
             android:layout_centerHorizontal="true"
             android:textColor="@color/white"/>
 
-        <!--Subtitle/Category of book-->
+        <!-- Tiêu đề phụ -->
         <TextView
             android:id="@+id/subTitleTv"
             android:layout_width="wrap_content"
@@ -46,34 +46,33 @@
             android:textColor="@color/white"
             android:layout_below="@id/titleTv"/>
 
-        </RelativeLayout>
+    </RelativeLayout>
 
-        <!--Search-->
+    <!-- Ô tìm kiếm -->
+    <EditText
+        android:id="@+id/searchEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/white"
+        android:layout_below="@id/toolbarRl"
+        android:padding="10dp"
+        android:hint="Search"
+        android:textColorHint="@color/gray02"
+        android:drawableStart="@drawable/ic_search_gray"
+        android:drawablePadding="10dp"
+        android:textColor="@color/black"/>
 
-        <EditText
-            android:id="@+id/searchEt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:background="@color/white"
-            android:layout_below="@id/toolbarRl"
-            android:padding="10dp"
-            android:hint="Search"
-            android:textColorHint="@color/gray02"
-            android:drawableStart="@drawable/ic_search_gray"
-            android:drawablePadding="10dp"
-            android:textColor="@color/black"/>
-        <!--Pdf List-->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/bookRv"
-            android:layout_width="match_parent"
-            android:layout_below="@id/searchEt"
-            android:layout_margin="10dp"
-            android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/row_pdf_admin"/>
-            <!--Pdf List-->
+    <!-- Danh sách sách -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/bookRv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/searchEt"
+        android:layout_margin="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/row_pdf_admin"/>
 
 </RelativeLayout>

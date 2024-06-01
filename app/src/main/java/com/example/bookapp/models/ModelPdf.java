@@ -1,17 +1,21 @@
 package com.example.bookapp.models;
 
 public class ModelPdf {
-    //variables
-    String uid, id, title, description, categoryId, url;
-    long timestamp, viewsCount, downloadsCount;
-    boolean favorite;
-
-    //empty constructor, required for firebase
-    public ModelPdf(){
-
+    String uid; // Mã định danh của người dùng tải lên tài liệu PDF
+    String id; // Mã định danh duy nhất của tài liệu PDF
+    String title; // Tiêu đề của tài liệu PDF
+    String description; // Mô tả tài liệu PDF
+    String categoryId; // Mã định danh của thể loại của tài liệu PDF
+    String url; // Đường dẫn URL của tài liệu PDF
+    long timestamp; // Thời gian tải lên tài liệu PDF (ở dạng timestamp)
+    long viewsCount; // Số lượt xem của tài liệu PDF
+    long downloadsCount; // Số lượt tải xuống của tài liệu PDF
+    boolean favorite; // Trạng thái yêu thích của tài liệu PDF
+    // Hàm khởi tạo không tham số
+    public ModelPdf() {
     }
-    //constructor with all params
 
+    // Hàm khởi tạo với tất cả các thuộc tính
     public ModelPdf(String uid, String id, String title, String description, String categoryId, String url, long timestamp, long viewsCount, long downloadsCount, boolean favorite) {
         this.uid = uid;
         this.id = id;
@@ -25,9 +29,7 @@ public class ModelPdf {
         this.favorite = favorite;
     }
 
-
-    //*------Getter/Setter-------*/
-
+    // Các phương thức getter và setter cho các thuộc tính
     public String getUid() {
         return uid;
     }

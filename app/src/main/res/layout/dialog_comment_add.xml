@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- RelativeLayout tổng thể chứa các thành phần bên trong, có background và padding -->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/shape_rect02"
     android:padding="20dp">
-    <!--Button: goback, dismiss dialog-->
+
+    <!-- ImageButton: Nút quay lại, để đóng dialog -->
     <ImageButton
         android:id="@+id/backBtn"
         android:layout_width="wrap_content"
@@ -15,7 +18,7 @@
         android:src="@drawable/ic_back_white"
         app:tint="@color/black"/>
 
-    <!--TextView: dialog title-->
+    <!-- TextView: Tiêu đề của dialog -->
     <TextView
         android:id="@+id/titleTv"
         android:layout_width="match_parent"
@@ -28,7 +31,7 @@
         android:textSize="16sp"
         android:textStyle="bold"/>
 
-    <!--TextInnputLayout: input comment-->
+    <!-- TextInputLayout: Ô nhập comment -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/commentTil"
         android:layout_width="match_parent"
@@ -46,7 +49,8 @@
             android:inputType="textCapSentences|textMultiLine"/>
 
     </com.google.android.material.textfield.TextInputLayout>
-    <!--Button: submit comment-->
+
+    <!-- Button: Nút gửi comment -->
     <Button
         android:id="@+id/submitBtn"
         android:layout_width="match_parent"

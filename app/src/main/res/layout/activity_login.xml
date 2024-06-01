@@ -7,11 +7,14 @@
     android:background="@drawable/back01"
     tools:context=".activities.LoginActivity">
 
+    <!-- Phần toolbar chứa biểu tượng và tiêu đề -->
     <RelativeLayout
         android:id="@+id/toolbarRl"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:background="@drawable/shape_toolbar01">
+
+        <!-- Biểu tượng ứng dụng -->
         <ImageView
             android:id="@+id/iconIv"
             android:layout_width="110dp"
@@ -19,6 +22,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="40dp"
             android:src="@drawable/logo"/>
+
+        <!-- Tiêu đề "Please Login" -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,6 +36,7 @@
             android:textSize="28sp"/>
     </RelativeLayout>
 
+    <!-- ScrollView chứa các thành phần nhập liệu và nút đăng nhập -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -39,17 +45,19 @@
         android:layout_marginEnd="30dp"
         android:layout_marginTop="225dp">
 
+        <!-- RelativeLayout chứa các trường nhập liệu và nút đăng nhập -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!--Email-->
+            <!-- TextInputLayout chứa EditText để nhập email -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/emailTil"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:hintEnabled="false">
 
+                <!-- EditText để người dùng nhập email -->
                 <EditText
                     android:id="@+id/emailEt"
                     android:layout_width="match_parent"
@@ -65,8 +73,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-
-            <!--Password-->
+            <!-- TextInputLayout chứa EditText để nhập mật khẩu -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/passwordTil"
                 android:layout_width="match_parent"
@@ -76,6 +83,7 @@
                 app:passwordToggleEnabled="true"
                 app:hintEnabled="false">
 
+                <!-- EditText để người dùng nhập mật khẩu -->
                 <EditText
                     android:id="@+id/passwordEt"
                     android:layout_width="match_parent"
@@ -91,7 +99,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--Forgot password-->
+            <!-- TextView để người dùng chọn quên mật khẩu -->
             <TextView
                 android:id="@+id/forgotTv"
                 android:layout_width="wrap_content"
@@ -102,7 +110,8 @@
                 android:padding="5dp"
                 android:text="Forgot Password?"
                 android:textColor="@color/gray02"/>
-            <!--Login Button-->
+
+            <!-- Nút đăng nhập -->
             <Button
                 android:id="@+id/loginBtn"
                 android:layout_width="match_parent"
@@ -112,12 +121,10 @@
                 android:background="@drawable/shape_button01"
                 android:text="Login"
                 android:textColor="@color/white"/>
-
         </RelativeLayout>
-
     </ScrollView>
 
-    <!--No Account, Register-->
+    <!-- TextView để người dùng chọn đăng ký tài khoản mới -->
     <TextView
         android:id="@+id/noAccountTv"
         android:layout_width="wrap_content"

@@ -35,83 +35,52 @@ import java.util.HashMap;
 
 public class PdfAddActivity extends AppCompatActivity {
 
-    //set up view binding
-    private  ActivityPdfAddBinding binding;
-    private FirebaseAuth firebaseAuth;
+    private ActivityPdfAddBinding binding; // Binding đến layout của activity
+    private FirebaseAuth firebaseAuth; // Đối tượng Firebase Authentication
+    private ProgressDialog progressDialog; // Hiển thị dialog tiến trình
 
-    //progress dialog
-    private ProgressDialog progressDialog;
+    private ArrayList<String> categoryTitleArrayList, categoryIdArrayList; // Danh sách các danh mục
 
-    //arraylist to hold pdf categories
-    private ArrayList<String> categoryTitleArrayList, categoryIdArrayList;
-
-    //uri of picked pdf
-    private Uri pdfUri = null;
-    private static final int PDF_PICK_CODE = 1000;
-    private static final  String TAG = "ADD_PDF_TAG";
+    private Uri pdfUri = null; // URI của tệp PDF được chọn
+    private static final int PDF_PICK_CODE = 1000; // Mã định danh để xác định kết quả từ Intent chọn tệp PDF
+    private static final String TAG = "ADD_PDF_TAG"; // Tên tag để ghi log
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityPdfAddBinding.inflate(getLayoutInflater());
+        binding = ActivityPdfAddBinding.inflate(getLayoutInflater()); // Khởi tạo binding với layout activity_pdf_add.xml
         setContentView(binding.getRoot());
 
-        //init firebase auth
-        firebaseAuth = FirebaseAuth.getInstance();
-        loadPdfCategories();
+        firebaseAuth = FirebaseAuth.getInstance(); // Lấy instance của FirebaseAuth
+        loadPdfCategories(); // Tải danh sách các danh mục
 
-        //setup progress dialog
-        progressDialog = new ProgressDialog(this);
+        progressDialog = new ProgressDialog(this); // Khởi tạo ProgressDialog
         progressDialog.setTitle("Please wait");
-        progressDialog.setCanceledOnTouchOutside (false);
+        progressDialog.setCanceledOnTouchOutside(false);
 
-        //handle click, go to previous activity
-        binding.backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        // Xử lý sự kiện nhấn nút "Back"
+        binding.backBtn.setOnClickListener(v -> onBackPressed());
 
-        //handle click, attach pdf
-        binding.attachBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pdfPickIntent();
-            }
-        });
+        // Xử lý sự kiện nhấn nút "Attach"
+        binding.attachBtn.setOnClickListener(v -> pdfPickIntent());
 
-        //handle click, pick category
-        binding.categoryTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                categoryPickDialog();
-            }
-        });
+        // Xử lý sự kiện nhấn vào textview danh mục
+        binding.categoryTv.setOnClickListener(v -> categoryPickDialog());
 
-        //handle click, upload pdf
-        binding.submitBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //validate data
-                validateData();
-            }
-        });
-
+        // Xử lý sự kiện nhấn nút "Submit"
+        binding.submitBtn.setOnClickListener(v -> validateData());
     }
 
-    private String title="", description="";
+    private String title="", description=""; // Lưu trữ tiêu đề và mô tả của tệp PDF
 
     private void validateData() {
-        //Step 1: Validate data
+        // Kiểm tra dữ liệu người dùng nhập vào
         Log.d(TAG, "validateData: validating data...");
 
-        //get data
         title = binding.titleEt.getText().toString().trim();
         description = binding.descriptionEt.getText().toString().trim();
 
-
-        //validate data
+        // Kiểm tra tiêu đề, mô tả, danh mục và PDF được chọn
         if (TextUtils.isEmpty(title)){
             Toast.makeText(this, "Enter Title...", Toast.LENGTH_SHORT).show();
         }
@@ -125,116 +94,91 @@ public class PdfAddActivity extends AppCompatActivity {
             Toast.makeText(this, "Pick Pdf...", Toast.LENGTH_SHORT).show();
         }
         else{
-            //all data is valid, can upload now
             uploadPdfToStorage();
         }
     }
 
     private void uploadPdfToStorage() {
-        //Step 2: Upload Pdf to firebase storage
+        // Tải lên tệp PDF lên Firebase Storage
         Log.d(TAG, "uploadPdfToStorage: uploading to storage...");
 
-        //show progress
         progressDialog.setMessage("Uploading Pdf...");
         progressDialog.show();
 
-        //timestamp
-        long timestamp = System.currentTimeMillis();
+        long timestamp = System.currentTimeMillis(); // Lấy thời gian hiện tại (timestamp)
 
-        //path of pdf in firebase storage
-        String filePathAndName = "Books/" + timestamp;
+        String filePathAndName = "Books/" + timestamp; // Đường dẫn lưu trữ tệp PDF
 
-        //storage reference
         StorageReference storageReference = FirebaseStorage.getInstance().getReference(filePathAndName);
-        storageReference.putFile(pdfUri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess (UploadTask.TaskSnapshot taskSnapshot) {
-                        Log.d(TAG, "onSuccess: PDF uploaded to storage...");
-                        Log.d(TAG, "onSuccess: getting pdf url");
+        storageReference.putFile(pdfUri) // Tải lên tệp PDF lên Firebase Storage
+                .addOnSuccessListener(taskSnapshot -> {
+                    Log.d(TAG, "onSuccess: PDF uploaded to storage...");
+                    Log.d(TAG, "onSuccess: getting pdf url");
 
-                        //get pdf url
-                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                        while (!uriTask.isSuccessful());
-                        String uploadedPdfUrl = ""+uriTask.getResult();
+                    Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl(); // Lấy URL tải về của tệp PDF
+                    while (!uriTask.isSuccessful()); // Chờ đến khi lấy được URL
+                    String uploadedPdfUrl = uriTask.getResult().toString();
 
-                        //upload to firebase db
-                        uploadedPdfInfoToDb(uploadedPdfUrl, timestamp);
-                    }
+                    uploadedPdfInfoToDb(uploadedPdfUrl, timestamp); // Lưu thông tin tệp PDF vào Firebase Database
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG,"onFailure: PDF upload failed due to "+e.getMessage());
-                        Toast.makeText(PdfAddActivity.this, "PDF upload failed due to "+e.getMessage(),Toast.LENGTH_SHORT).show();
-                    }
+                .addOnFailureListener(e -> {
+                    Log.d(TAG,"onFailure: PDF upload failed due to "+e.getMessage());
+                    Toast.makeText(PdfAddActivity.this, "PDF upload failed due to "+e.getMessage(),Toast.LENGTH_SHORT).show();
                 });
     }
 
     private void uploadedPdfInfoToDb(String uploadedPdfUrl, long timestamp) {
-        //Step 3: Upload Pdf info to firebase storage
+        // Lưu thông tin tệp PDF vào Firebase Database
         Log.d(TAG, "uploadPdfToStorage: uploading Pdf info to firebase db...");
 
         progressDialog.setMessage("Uploading pdf info...");
 
-        String uid = firebaseAuth.getUid();
+        String uid = firebaseAuth.getUid(); // Lấy ID người dùng hiện tại
 
-        //setup data to upload
+        // Tạo một HashMap chứa thông tin tệp PDF
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("uid", ""+uid);
+        hashMap.put("uid", uid);
         hashMap.put("id", ""+timestamp);
-        hashMap.put("title", ""+title);
-        hashMap.put("description", ""+description);
-        hashMap.put("categoryId", ""+selectedCategoryId);
-        hashMap.put("url", ""+uploadedPdfUrl);
+        hashMap.put("title", title);
+        hashMap.put("description", description);
+        hashMap.put("categoryId", selectedCategoryId);
+        hashMap.put("url", uploadedPdfUrl);
         hashMap.put("timestamp", timestamp);
 
-        //db reference: DB >
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
-        ref.child(""+timestamp)
-                .setValue(hashMap)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        progressDialog.dismiss();
-                        Log.d(TAG, "onSuccess: Successfully uploaded...");
-                        Toast.makeText( PdfAddActivity.this, "Successfully uploaded...", Toast.LENGTH_SHORT).show();
-                    }
+        ref.child(""+timestamp) // Tạo một node mới với key là timestamp
+                .setValue(hashMap) // Lưu thông tin tệp PDF vào node đó
+                .addOnSuccessListener(unused -> {
+                    progressDialog.dismiss();
+                    Log.d(TAG, "onSuccess: Successfully uploaded...");
+                    Toast.makeText(PdfAddActivity.this, "Successfully uploaded...", Toast.LENGTH_SHORT).show();
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        progressDialog.dismiss();
-                        Log.d(TAG,"onFailure: Failed to upload to db due to "+e.getMessage());
-                        Toast.makeText( PdfAddActivity.this, "Failed to upload to db due to "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    Log.d(TAG,"onFailure: Failed to upload to db due to "+e.getMessage());
+                    Toast.makeText(PdfAddActivity.this, "Failed to upload to db due to "+e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
-
     }
 
     private void loadPdfCategories() {
+        // Tải danh sách các danh mục từ Firebase Database
         Log.d(TAG, "loadPdfCategories: Loading pdf categories...");
         categoryTitleArrayList = new ArrayList<>();
         categoryIdArrayList = new ArrayList<>();
 
-        //db reference to load categories..db> Categories
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference ("Categories");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Categories");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 categoryTitleArrayList.clear();
                 categoryIdArrayList.clear();
-                //clear before adding data
                 for (DataSnapshot ds: snapshot.getChildren()){
-
-                    //get id and title ò category
+                    // Lưu trữ ID và tên danh mục vào các ArrayList tương ứng
                     String categoryId = ""+ds.child("id").getValue();
                     String categoryTitle = ""+ds.child("category").getValue();
 
-                    //add to respective arraylists
                     categoryTitleArrayList.add(categoryTitle);
                     categoryIdArrayList.add(categoryId);
-
                 }
             }
 
@@ -245,31 +189,28 @@ public class PdfAddActivity extends AppCompatActivity {
         });
     }
 
-    //selected category id and category title
     private String selectedCategoryId, selectedCategoryTitle;
     private void categoryPickDialog() {
-        //first we need to get categories from firebase
+        // Hiển thị hộp thoại cho người dùng chọn danh mục
         Log.d(TAG, "categoryPickDialog: showing category pick dialog");
 
-        //get string array of categories from arraylist
-        String[] categoriesArray = new  String[categoryTitleArrayList.size()];
+        // Lấy danh sách các danh mục và chuyển thành mảng
+        String[] categoriesArray = new String[categoryTitleArrayList.size()];
         for (int i=0; i<categoryTitleArrayList.size(); i++){
             categoriesArray[i] = categoryTitleArrayList.get(i);
         }
 
-        //alert dialog
+        // Tạo và hiển thị hộp thoại chọn danh mục
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Pick Category")
                 .setItems(categoriesArray, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //handle item click
-                        // get clicked item from list
+                        // Lưu lại danh mục đã chọn
                         selectedCategoryTitle = categoryTitleArrayList.get(which);
                         selectedCategoryId = categoryIdArrayList.get(which);
-                        //set to category textview
+                        // Cập nhật giao diện
                         binding.categoryTv.setText(selectedCategoryTitle);
-
                         Log.d(TAG, "onClick: Selected Category: "+selectedCategoryId+" "+selectedCategoryTitle);
                     }
                 })
@@ -277,32 +218,29 @@ public class PdfAddActivity extends AppCompatActivity {
     }
 
     private void pdfPickIntent() {
+        // Khởi chạy intent để người dùng chọn tệp PDF
         Log.d(TAG, "pdfPickIntent: starting pdf intent");
-
         Intent intent = new Intent();
         intent.setType("application/pdf");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Pdf"), PDF_PICK_CODE);
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode, resultCode, data);
 
+        // Xử lý kết quả chọn tệp PDF
         if (resultCode == RESULT_OK) {
             if (requestCode == PDF_PICK_CODE) {
                 Log.d(TAG,  "onActivityResult: PDF Picked");
-
                 pdfUri = data.getData();
-
                 Log.d(TAG,  "onActivityResult: URI: "+pdfUri);
             }
         }
         else {
             Log.d(TAG,"onActivityResult: cancelled picking pdf");
-            Toast.makeText( this,"cancelled picking pdf", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"cancelled picking pdf", Toast.LENGTH_SHORT).show();
         }
-
     }
 }

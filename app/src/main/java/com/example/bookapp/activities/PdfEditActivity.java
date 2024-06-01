@@ -26,15 +26,15 @@ import java.util.HashMap;
 
 public class PdfEditActivity extends AppCompatActivity {
 
-    //view binding
     private ActivityPdfEditBinding binding;
 
-    //book id get from intent started from AdapterPdfAdmin
-    private  String bookId;
+    // Lưu trữ ID của cuốn sách
+    private String bookId;
 
-    //progress dialog
+    // Khởi tạo ProgressDialog để hiển thị khi cập nhật thông tin sách
     private ProgressDialog progressDialog;
 
+    // Lưu trữ danh sách ID và tiêu đề của các danh mục
     private ArrayList<String> categoryTitleArraylist, categoryIdArrayList;
 
     private static final String TAG = "BOOK_EDIT_TAG";
@@ -44,25 +44,27 @@ public class PdfEditActivity extends AppCompatActivity {
         binding = ActivityPdfEditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //book id get from intent started from AdapterPdf Admin
+        // Lấy ID của cuốn sách từ Intent
         bookId = getIntent().getStringExtra("bookId");
 
-        //setup progress dialog
+        // Khởi tạo ProgressDialog
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setCanceledOnTouchOutside (false);
-        
+
+        // Tải danh sách các danh mục
         loadCategories();
+        // Tải thông tin của cuốn sách
         loadBookInfo();
 
-        //handle click, go to previous screen
+        // Xử lý sự kiện khi bấm nút "Back"
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-        //handle click begin upload
+        // Xử lý sự kiện khi bấm nút "Submit"
         binding.submitBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -71,13 +73,14 @@ public class PdfEditActivity extends AppCompatActivity {
         });
     }
 
+    // Lưu trữ tiêu đề và mô tả của cuốn sách
     private String title="", description="";
     private void validateData() {
-        //get data
+        // Lấy giá trị của các trường nhập liệu
         title = binding.titleEt.getText().toString().trim();
         description = binding.descriptionEt.getText().toString().trim();
 
-        //validate data
+        // Kiểm tra các trường nhập liệu
         if(TextUtils.isEmpty(title)){
             Toast.makeText(this, "Enter Title...", Toast.LENGTH_SHORT).show();
         }
@@ -88,6 +91,7 @@ public class PdfEditActivity extends AppCompatActivity {
             Toast.makeText(this, "Pick Category......", Toast.LENGTH_SHORT).show();
         }
         else {
+            // Cập nhật thông tin của cuốn sách
             updatePdf();
         }
 
@@ -96,17 +100,17 @@ public class PdfEditActivity extends AppCompatActivity {
     private void updatePdf() {
         Log.d(TAG, "updatePdf: Starting updating pdf info to db...");
 
-        //show progress
+        // Hiển thị ProgressDialog
         progressDialog.setMessage("Updating book info...");
         progressDialog.show();
 
-        //set data to update to db
+        // Tạo một HashMap chứa thông tin mới của cuốn sách
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("title",""+title);
         hashMap.put("decription",""+description);
         hashMap.put("categoryId", ""+selectedCategoryId);
 
-        //start updating
+        // Cập nhật thông tin cuốn sách trên Firebase Database
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
         ref.child(bookId)
                 .updateChildren(hashMap)
@@ -131,27 +135,30 @@ public class PdfEditActivity extends AppCompatActivity {
     private void loadBookInfo() {
         Log.d(TAG, "loadBookInfo: Loading book info");
 
+        // Lấy thông tin của cuốn sách từ Firebase Database
         DatabaseReference refBooks = FirebaseDatabase.getInstance().getReference("Books");
         refBooks.child(bookId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        // Lấy các thông tin của cuốn sách
                         selectedCategoryId =""+snapshot.child("categoryId").getValue();
                         String description =""+snapshot.child("description").getValue();
                         String title = ""+snapshot.child("title").getValue();
-                        //set to views
+                        // Hiển thị các thông tin trên giao diện
                         binding.titleEt.setText(title);
                         binding.descriptionEt.setText(description);
 
                         Log.d(TAG, "onDataChange: Loading Book Category Info");
+                        // Lấy thông tin của danh mục sách
                         DatabaseReference refBookCategory = FirebaseDatabase.getInstance().getReference("Categories");
                         refBookCategory.child(selectedCategoryId)
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        //get category
+                                        // Lấy tên danh mục
                                         String category = ""+snapshot.child("category").getValue();
-                                        //set to category text view
+                                        // Hiển thị tên danh mục trên giao diện
                                         binding.categoryTv.setText(category);
                                     }
 
@@ -170,15 +177,15 @@ public class PdfEditActivity extends AppCompatActivity {
     }
 
 
-    private  String selectedCategoryId="", selectedCategoryTitle="";
-    private  void categoryDialog(){
-        //make string array from arraylist of string
+    private String selectedCategoryId="", selectedCategoryTitle="";
+    private void categoryDialog(){
+        // Tạo một mảng chứa các tiêu đề của các danh mục
         String[] categoriesArray = new String[categoryTitleArraylist.size()];
         for(int i=0; i<categoryTitleArraylist.size(); i++){
             categoriesArray[i] = categoryTitleArraylist.get(i);
         }
 
-        //Alert Dialog
+        // Hiển thị một dialog để người dùng chọn danh mục
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose Category")
                 .setItems(categoriesArray, new DialogInterface.OnClickListener() {

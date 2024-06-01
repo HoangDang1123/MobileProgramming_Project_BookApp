@@ -8,44 +8,42 @@ import com.example.bookapp.models.ModelCategory;
 import java.util.ArrayList;
 
 public class FilterCategory extends Filter {
-    //arraylist in which we want to search
-    ArrayList<ModelCategory> filterList;
-    //adapter in which filter need to be implemented
-    AdapterCategory adapterCategory;
+    ArrayList<ModelCategory> filterList; // Danh sách các danh mục sách cần lọc
+    AdapterCategory adapterCategory; // Adapter hiển thị danh sách các danh mục sách
 
-    //constructor
+    // Hàm khởi tạo, nhận vào danh sách các danh mục sách và adapter tương ứng
     public FilterCategory (ArrayList<ModelCategory> filterList, AdapterCategory adapterCategory) {
         this.filterList = filterList;
         this.adapterCategory = adapterCategory;
     }
+
+    // Phương thức thực hiện việc lọc danh sách các danh mục sách
     @Override
     protected FilterResults performFiltering (CharSequence constraint) {
         FilterResults results = new FilterResults();
-        //value should not be null and empty
         if (constraint != null && constraint.length() > 0) {
-            //change to upper case, or lower case to avoid case sensitivity
+            // Chuyển từ khóa tìm kiếm thành chữ in hoa để so sánh
             constraint = constraint.toString().toUpperCase();
             ArrayList<ModelCategory> filteredModels = new ArrayList<>();
             for (int i = 0; i < filterList.size(); i++){
-                //validate
+                // Kiểm tra xem tên danh mục có chứa từ khóa tìm kiếm hay không
                 if (filterList.get(i).getCategory().toUpperCase().contains(constraint)){
-                    //add to filetered list
                     filteredModels.add(filterList.get(i));
                 }
             }
-            results.count =  filteredModels.size();
-            results.values = filteredModels;
+            results.count =  filteredModels.size(); // Số lượng danh mục sách sau khi lọc
+            results.values = filteredModels; // Danh sách các danh mục sách sau khi lọc
         }
         else {
-            results.count = filterList.size();
+            results.count = filterList.size(); // Nếu không có từ khóa tìm kiếm, trả về danh sách gốc
             results.values = filterList;
         }
-        return results; //dont miss it
+        return results;
     }
 
+    // Phương thức cập nhật giao diện sau khi lọc danh sách các danh mục sách
     @Override
     protected void publishResults (CharSequence constraint, FilterResults results) {
-        //apply filter changes
         adapterCategory.categoryArrayList = (ArrayList<ModelCategory>)results.values;
 
         //notify changes

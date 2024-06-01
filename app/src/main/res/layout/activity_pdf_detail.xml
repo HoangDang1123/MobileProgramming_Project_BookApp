@@ -9,14 +9,14 @@
     android:background="@color/white"
     tools:context=".activities.PdfDetailActivity">
 
-    <!--Toolbar-->
+    <!-- Phần Toolbar -->
     <RelativeLayout
         android:id="@+id/toolbarRl"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:background="@drawable/shape_toolbar02">
 
-        <!--Back button-->
+        <!-- Nút quay lại -->
         <ImageButton
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
@@ -26,7 +26,7 @@
             android:layout_alignBaseline="@android:color/transparent"
             android:src="@drawable/ic_back_white"/>
 
-        <!--Toorbar title-->
+        <!-- Tiêu đề "Back Details" -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
 
     </RelativeLayout>
 
-    <!--All Content under scrollview-->
+    <!-- ScrollView chứa nội dung chi tiết sách -->
     <androidx.core.widget.NestedScrollView
         android:layout_above="@id/bookOptionsLl"
         android:layout_below="@+id/toolbarRl"
@@ -45,17 +45,18 @@
         android:layout_height="match_parent"
         android:padding="10dp">
 
+        <!-- LinearLayout chứa nội dung chi tiết sách -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <!--Book info-->
+            <!-- Phần hiển thị PDF -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <!--Book preview-->
+                <!-- Phần hiển thị PDFView và ProgressBar -->
                 <RelativeLayout
                     android:id="@+id/pdfRl"
                     android:layout_width="110dp"
@@ -63,13 +64,11 @@
                     android:layout_marginEnd="5dp"
                     android:background="@color/gray02">
 
-                    <!--Pdf view-->
                     <com.github.barteksc.pdfviewer.PDFView
                         android:id="@+id/pdfView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"/>
 
-                    <!--progress-->
                     <ProgressBar
                         android:id="@+id/progressBar"
                         android:layout_width="match_parent"
@@ -77,7 +76,7 @@
 
                 </RelativeLayout>
 
-                <!--Book title-->
+                <!-- Tiêu đề sách -->
                 <TextView
                     android:id="@+id/titleTv"
                     style="@style/TextAppearance.MaterialComponents.Headline6"
@@ -86,14 +85,14 @@
                     android:layout_toEndOf="@id/pdfRl"
                     android:text="Title of Book"/>
 
-                <!--Table-->
+                <!-- Bảng thông tin sách -->
                 <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/titleTv"
                     android:layout_toEndOf="@+id/pdfRl">
 
-                    <!--Category Row-->
+                    <!-- Dòng 1: Danh mục sách -->
                     <TableRow>
                         <TextView
                             android:id="@+id/categoryLabelTv"
@@ -112,7 +111,7 @@
 
                     </TableRow>
 
-                    <!--Date Row-->
+                    <!-- Dòng 2: Ngày xuất bản -->
                     <TableRow
                         android:layout_marginTop="5dp">
                         <TextView
@@ -134,7 +133,7 @@
 
                     </TableRow>
 
-                    <!--Size Row-->
+                    <!-- Dòng 3: Kích thước -->
                     <TableRow
                         android:layout_marginTop="5dp">
                         <TextView
@@ -156,7 +155,7 @@
 
                     </TableRow>
 
-                    <!--Views Count Row-->
+                    <!-- Dòng 4: Lượt xem -->
                     <TableRow
                         android:layout_marginTop="5dp">
                         <TextView
@@ -178,7 +177,7 @@
 
                     </TableRow>
 
-                    <!--Downloads Count Row-->
+                    <!-- Dòng 5: Số lượt tải về -->
                     <TableRow
                         android:layout_marginTop="5dp">
                         <TextView
@@ -200,7 +199,7 @@
 
                     </TableRow>
 
-                    <!--Number of Pages-->
+                    <!-- Dòng 6: Số trang -->
                     <TableRow
                         android:layout_marginTop="5dp">
                         <TextView
@@ -226,7 +225,7 @@
 
             </RelativeLayout>
 
-            <!--Book description-->
+            <!-- Mô tả sách -->
             <TextView
                 android:id="@+id/descriptionTv"
                 android:layout_width="match_parent"
@@ -235,16 +234,19 @@
                 android:text="The description of the book"
                 android:textColor="@color/black"/>
 
+            <!-- Đường kẻ ngang -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray03"/>
 
+            <!-- Phần bình luận -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <!-- Tiêu đề "Comments" -->
                 <TextView
                     android:id="@+id/commentsLabelTv"
                     android:layout_width="match_parent"
@@ -255,7 +257,7 @@
                     android:textColor="@color/black"
                     android:textSize="16sp"/>
 
-                <!--Button: Show comment add dialog-->
+                <!-- Nút "Add Comment" -->
                 <ImageButton
                     android:id="@+id/addCommentBtn"
                     android:layout_width="wrap_content"
@@ -265,7 +267,7 @@
                     android:padding="5dp"
                     android:src="@drawable/ic_add_comment_black"/>
 
-                <!--RecyclerView: Show comments-->
+                <!-- RecyclerView hiển thị danh sách bình luận -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/commentsRv"
                     android:layout_width="match_parent"
@@ -281,7 +283,7 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <!--Layout for button at bottom-->
+    <!-- Phần các nút tùy chọn cho sách -->
     <LinearLayout
         android:id="@+id/bookOptionsLl"
         android:layout_width="match_parent"
@@ -290,7 +292,7 @@
         android:background="@color/design_default_color_primary"
         android:layout_alignParentBottom="true">
 
-        <!--Button: Open to view pdf-->
+        <!-- Nút "Read" -->
         <Button
             android:id="@+id/readBookBtn"
             android:layout_width="match_parent"
@@ -300,7 +302,7 @@
             android:text="Read"
             android:background="@color/design_default_color_on_primary"/>
 
-        <!--Button: Download pdf-->
+        <!-- Nút "Download" -->
         <Button
             android:id="@+id/downloadBookBtn"
             android:layout_width="match_parent"
@@ -310,7 +312,7 @@
             android:text="Download"
             android:background="@color/design_default_color_on_primary"/>
 
-        <!--Button: Add/Remove Favorite-->
+        <!-- Nút "Add Favorite" -->
         <Button
             android:id="@+id/favoriteBtn"
             android:layout_width="match_parent"

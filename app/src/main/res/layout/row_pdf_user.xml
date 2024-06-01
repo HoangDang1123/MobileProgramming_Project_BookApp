@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- CardView để chứa nội dung của một cuốn sách -->
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -9,11 +10,13 @@
     app:cardCornerRadius="5dp"
     app:cardElevation="0dp"
     app:contentPadding="5dp">
-    
+
+    <!-- RelativeLayout chính để chứa các thành phần bên trong CardView -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        
+
+        <!-- RelativeLayout để chứa PDFView và ProgressBar -->
         <RelativeLayout
             android:id="@+id/pdfRl"
             android:layout_width="100dp"
@@ -21,20 +24,21 @@
             android:layout_marginEnd="5dp"
             android:background="@color/gray02">
 
-            <!--PdfView-->
+            <!-- PDFView để hiển thị file PDF -->
             <com.github.barteksc.pdfviewer.PDFView
                 android:id="@+id/pdfView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
-            <!--Progress Bar-->
+            <!-- ProgressBar để hiển thị khi đang tải PDF -->
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-            
+
         </RelativeLayout>
 
+        <!-- TextView để hiển thị tiêu đề sách -->
         <TextView
             android:id="@+id/titleTv"
             style="@style/TextAppearance.MaterialComponents.Headline6"
@@ -44,6 +48,7 @@
             android:layout_toEndOf="@id/pdfRl"
             android:maxLines="1"/>
 
+        <!-- TextView để hiển thị mô tả sách -->
         <TextView
             android:id="@+id/descriptionTv"
             style="@style/TextAppearance.MaterialComponents.Body2"
@@ -56,6 +61,7 @@
             android:maxLines="4"
             android:ellipsize="end"/>
 
+        <!-- TextView để hiển thị danh mục sách -->
         <TextView
             android:id="@+id/categoryTv"
             style="@style/TextAppearance.MaterialComponents.Caption"
@@ -66,6 +72,7 @@
             android:layout_alignParentBottom="true"
             android:maxLines="1"/>
 
+        <!-- TextView để hiển thị kích thước sách -->
         <TextView
             android:id="@+id/sizeTv"
             style="@style/TextAppearance.MaterialComponents.Caption"
@@ -76,6 +83,7 @@
             android:layout_alignParentBottom="true"
             android:maxLines="1"/>
 
+        <!-- TextView để hiển thị ngày tải lên của sách -->
         <TextView
             android:id="@+id/dateTv"
             style="@style/TextAppearance.MaterialComponents.Caption"
@@ -87,8 +95,6 @@
             android:textAlignment="center"
             android:layout_alignParentBottom="true"
             android:maxLines="1"/>
-
-
 
     </RelativeLayout>
 

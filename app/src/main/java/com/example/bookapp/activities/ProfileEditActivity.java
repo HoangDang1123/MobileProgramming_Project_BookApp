@@ -42,32 +42,33 @@ import java.util.HashMap;
 
 public class ProfileEditActivity extends AppCompatActivity {
 
-    //view binding
     private ActivityProfileEditBinding binding;
 
-    //firebase auth, get/update user data using vid
     private FirebaseAuth firebaseAuth;
 
     private ProgressDialog progressDialog;
     private static final String TAG = "PROFILE_EDIT_TAG";
     private Uri imageUri = null;
     private String name = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityProfileEditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //satup progress dialog
+        // Khởi tạo ProgressDialog để hiển thị trong quá trình cập nhật thông tin
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
-        progressDialog.setCanceledOnTouchOutside(false); //dont dismiss nite clicking outside of progress σταίος
+        progressDialog.setCanceledOnTouchOutside(false); // Không cho phép người dùng thoát khỏi ProgressDialog bằng cách nhấn bên ngoài
 
-        //setup firebase auth
+        // Lấy instance của FirebaseAuth
         firebaseAuth = FirebaseAuth.getInstance();
+
+        // Tải thông tin người dùng hiện tại từ Firebase
         loadUserInfo();
 
-        //handle click, go back
+        // Thiết lập sự kiện bấm nút quay lại
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,7 +76,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, pick image
+        // Thiết lập sự kiện bấm nút ảnh đại diện
         binding.profileIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,7 +84,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, update image
+        // Thiết lập sự kiện bấm nút cập nhật thông tin
         binding.updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,21 +93,22 @@ public class ProfileEditActivity extends AppCompatActivity {
         });
     }
 
-    private void loadUserInfo(){
+    private void loadUserInfo() {
         Log.d(TAG, "LoadUserInfo: Loading user info of user " + firebaseAuth.getUid());
+        // Truy cập vào nút "Users" trong Firebase Realtime Database
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.child(firebaseAuth.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //get all info of user here from snapshot
+                        // Lấy thông tin tên và ảnh đại diện của người dùng
                         String name = "" + snapshot.child("name").getValue();
                         String profileImage = "" + snapshot.child("profileImage").getValue();
 
-                        //set data to ui
+                        // Hiển thị tên người dùng trong EditText
                         binding.nameEt.setText(name);
 
-                        // set image, use Glide
+                        // Nếu có ảnh đại diện, hiển thị ảnh. Nếu không, hiển thị ảnh mặc định
                         if (!profileImage.equals("")) {
                             Glide.with(ProfileEditActivity.this)
                                     .load(profileImage)
@@ -128,52 +130,58 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     private void validateData() {
-        //get data
+        // Lấy dữ liệu từ EditText
         name = binding.nameEt.getText().toString().trim();
-        //validate data
-        if (TextUtils.isEmpty(name)){
-            //no name is entered
+
+        // Kiểm tra xem tên có trống không
+        if (TextUtils.isEmpty(name)) {
+            // Nếu tên trống, hiển thị thông báo
             Toast.makeText(this, "Enter name...", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            //name is entered
-            if (imageUri == null){
-                //need to update without image
+        } else {
+            // Nếu tên không trống
+            if (imageUri == null) {
+                // Nếu không có ảnh, cập nhật hồ sơ với ảnh trống
                 updateProfile("");
-            }
-            else {
-                //need to update with image
+            } else {
+                // Nếu có ảnh, tải ảnh lên
                 uploadImage();
             }
         }
     }
 
     private void uploadImage() {
+        // Hiển thị ProgressDialog
         Log.d(TAG, "uploadImage: Uploading profile image...");
         progressDialog.setMessage("Updating profile image");
         progressDialog.show();
 
-        //image path and name, use uid to replace previous
+        // Tạo đường dẫn lưu trữ ảnh
         String filePathAndName = "ProfileImages/" + firebaseAuth.getUid();
 
-        //storage reference
+        // Tham chiếu đến vị trí lưu trữ ảnh trong Firebase Storage
         StorageReference reference = FirebaseStorage.getInstance().getReference(filePathAndName);
+
+        // Tải ảnh lên Firebase Storage
         reference.putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Nếu tải ảnh thành công, lấy URL của ảnh đã tải
                         Log.d(TAG, "onSuccess: Profile image uploaded");
                         Log.d(TAG, "onSuccess: Getting url of uploaded image");
                         Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                         while (!uriTask.isSuccessful()) ;
                         String uploadedImageUrl = "" + uriTask.getResult();
                         Log.d(TAG, "onSucc String imageUrli Image URL: " + uploadedImageUrl);
+
+                        // Sau khi có URL, cập nhật hồ sơ
                         updateProfile(uploadedImageUrl);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        // Nếu tải ảnh thất bại, hiển thị thông báo lỗi
                         Log.d(TAG, "onFailure: Failed to upload image due to " + e.getMessage());
                         progressDialog.dismiss();
                         Toast.makeText(ProfileEditActivity.this, "Failed to upload image due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -182,24 +190,26 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     private void updateProfile(String imageUrl) {
+        // Hiển thị ProgressDialog
         Log.d(TAG, "updateProfile: Updating user profile");
         progressDialog.setMessage("Updating user profile...");
         progressDialog.show();
 
-        //setup data to update in db
+        // Tạo HashMap chứa các thông tin cần cập nhật
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("name", "" + name);
         if (imageUri != null) {
             hashMap.put("profileImage", "" + imageUrl);
         }
 
-        //update data to do
+        // Cập nhật thông tin người dùng trong Firebase Database
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
         databaseReference.child(firebaseAuth.getUid())
                 .updateChildren(hashMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+                        // Nếu cập nhật thành công, hiển thị thông báo
                         Log.d(TAG, "onSuccess: Profile updated...");
                         progressDialog.dismiss();
                         Toast.makeText(ProfileEditActivity.this, "Profile updated...", Toast.LENGTH_SHORT).show();
@@ -208,88 +218,108 @@ public class ProfileEditActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "onFailure: Failed to update do due to " + e.getMessage());
+                        // Nếu cập nhật thất bại, hiển thị thông báo lỗi
+                        Log.d(TAG, "onFailure: Failed to update db due to " + e.getMessage());
                         progressDialog.dismiss();
                         Toast.makeText(ProfileEditActivity.this, "Failed to update db due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
+    // Phương thức hiển thị menu đính kèm hình ảnh
     private void showImageAttachMenu() {
-        //init/setup popup menu
+        // Tạo một đối tượng PopupMenu mới, được neo vào view binding.profileIv
         PopupMenu popupMenu = new PopupMenu(this, binding.profileIv);
+
+        // Thêm hai mục menu vào PopupMenu: "Camera" và "Gallery"
         popupMenu.getMenu().add(Menu.NONE, 0, 0, "Camera");
         popupMenu.getMenu().add(Menu.NONE, 1, 1, "Gallery");
+
+        // Hiển thị PopupMenu
         popupMenu.show();
 
-        //handle menu item clicks
+        // Thiết lập một listener click cho các mục menu của PopupMenu
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                //get id of item clicked
+                // Lấy ID của mục menu được click
                 int which = item.getItemId();
+
+                // Xử lý click dựa trên ID của mục menu
                 if (which == 0) {
-                    //camera clicked
+                    // Người dùng click vào "Camera" - gọi phương thức pickImageCamera()
                     pickImageCamera();
-                }
-                else if (which == 1){
-                    //gallery clicked
+                } else if (which == 1) {
+                    // Người dùng click vào "Gallery" - gọi phương thức pickImageGallery()
                     pickImageGallery();
                 }
+
+                // Trả về false để cho biết mục menu đã được xử lý
                 return false;
             }
         });
     }
 
-    private void pickImageCamera(){
-        //intent to pick image from camera
+    // Phương thức xử lý chụp ảnh từ camera
+    private void pickImageCamera() {
+        // Tạo một đối tượng ContentValues mới để lưu trữ siêu dữ liệu ảnh
         ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE, "New Pick"); //image title
+        values.put(MediaStore.Images.Media.TITLE, "New Pick");
         values.put(MediaStore.Images.Media.DESCRIPTION, "Sample Image Description");
-        imageUri = getContentResolver().insert(MediaStore.Images.Media. EXTERNAL_CONTENT_URI, values);
 
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        // Chèn siêu dữ liệu ảnh vào MediaStore và lấy URI được tạo
+        imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+        // Tạo một Intent để khởi chạy ứng dụng Camera và chụp ảnh
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+
+        // Khởi chạy hoạt động Camera và xử lý kết quả bằng cách sử dụng cameraActivityResultLauncher
         cameraActivityResultLauncher.launch(intent);
     }
-    private void pickImageGallery(){
-        //intent to pick image from gallery
+
+    // Phương thức xử lý chọn ảnh từ thư viện
+    private void pickImageGallery() {
+        // Tạo một Intent để mở thư viện ảnh
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
+
+        // Khởi chạy hoạt động Thư viện ảnh và xử lý kết quả bằng cách sử dụng galleryActivityResultLauncher
         galleryActivityResultLauncher.launch(intent);
     }
 
+    // Launcher để xử lý kết quả của hoạt động Camera
     private ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    //used to handle result of camera intent
-                    //get uri of image
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Log.d(TAG, "onActivityResult: " + imageUri);
-                        Intent data = result.getData();
 
+                        // Hiển thị ảnh đã chụp lên ImageView
                         binding.profileIv.setImageURI(imageUri);
-                    }
-                    else {
+                    } else {
                         Toast.makeText(ProfileEditActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
 
+    // Launcher để xử lý kết quả của hoạt động Thư viện ảnh
     private ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    //used to handle result of camera intent
-                    //get uri of image
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Log.d(TAG, "onActivityResult: " + imageUri);
                         Intent data = result.getData();
+
+                        // Lấy URI của ảnh được chọn từ Thư viện
                         imageUri = data.getData();
                         Log.d(TAG, "onActivityResult: Picked from Gallery" + imageUri);
 
+                        // Hiển thị ảnh đã chọn lên ImageView
                         binding.profileIv.setImageURI(imageUri);
                     }
                 }

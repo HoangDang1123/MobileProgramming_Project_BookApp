@@ -1,25 +1,26 @@
 package com.example.bookapp.models;
 
 public class ModelComment {
+    String id; // Mã định danh duy nhất của bình luận
+    String bookId; // Mã định danh của quyển sách được bình luận
+    String timestamp; // Thời gian tạo bình luận (ở dạng chuỗi)
+    String comment; // Nội dung bình luận
+    String uid; // Mã định danh của người dùng tạo bình luận
 
-    //variables
-    String id, bookId, timestamp, comment, uid;
-
-    //constructor, empty required by firebase
+    // Hàm khởi tạo không tham số
     public ModelComment() {
     }
 
-    //constructor with all params
+    // Hàm khởi tạo với tất cả các thuộc tính
     public ModelComment(String id, String bookId, String timestamp, String comment, String uid) {
         this.id = id;
         this.bookId = bookId;
-        this.timestamp= timestamp;
+        this.timestamp = timestamp;
         this.comment = comment;
         this.uid = uid;
     }
 
-    /*--Getter Setters--*/
-
+    // Các phương thức getter và setter cho các thuộc tính
     public String getId() {
         return id;
     }

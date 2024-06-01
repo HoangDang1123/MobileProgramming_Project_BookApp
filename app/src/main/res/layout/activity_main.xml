@@ -9,6 +9,7 @@
     android:padding="20dp"
     tools:context=".activities.MainActivity">
 
+    <!-- Biểu tượng ứng dụng -->
     <ImageView
         android:id="@+id/iconIv"
         android:src="@drawable/logo"
@@ -16,6 +17,8 @@
         android:layout_height="200dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"/>
+
+    <!-- Tiêu đề "Welcome to Book App" -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,6 +28,8 @@
         android:text="Welcome to Book App"
         android:textColor="@color/black"
         android:textSize="16sp"/>
+
+    <!-- Nút đăng nhập -->
     <Button
         android:id="@+id/loginBtn"
         android:layout_width="match_parent"
@@ -34,6 +39,8 @@
         android:text="Login"
         android:background="@drawable/shape_button01"
         android:textColor="@color/white"/>
+
+    <!-- Nút bỏ qua đăng nhập và tiếp tục -->
     <Button
         android:id="@+id/skipBtn"
         android:layout_width="match_parent"

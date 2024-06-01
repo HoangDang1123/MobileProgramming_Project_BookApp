@@ -53,29 +53,35 @@ public class CategoryAddActivity extends AppCompatActivity {
             }
         });
 
-
     }
-    
+
 
     private String category = " ";
     private void validateData() {
+
+        //Lấy data
         category = binding.categoryEt.getText().toString().trim();
 
         if(TextUtils.isEmpty(category)){
+            // Nếu category rỗng hiển thị thông báo "Please enter category...!"
             Toast.makeText(this, "Please enter category...!", Toast.LENGTH_SHORT).show();
         }
         else {
+            //Ngược lại nó sẽ gọi phương thức addCategoryFirebase
             addCategoryFirebase();
         }
     }
 
     private void addCategoryFirebase(){
+        //show progress
         progressDialog.setMessage("Adding category...");
         progressDialog.show();
 
+        //get timestamp
         long timestamp = System.currentTimeMillis();
 
-        HashMap<String, Object> hashMap = new HashMap<>();
+        //setup info to add in firebase db
+        HashMap<String, Object> hashMap = new HashMap<>(); //lưu trữ thông tin danh mục
         hashMap.put("id", ""+timestamp);
         hashMap.put("category", ""+category);
         hashMap.put("timestamp", timestamp);

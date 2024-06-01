@@ -7,14 +7,14 @@
     android:background="@drawable/back01"
     tools:context=".activities.ProfileEditActivity">
 
-    <!--Toolbar-->
+    <!-- Toolbar -->
     <RelativeLayout
         android:id="@+id/toolbarRl"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:background="@drawable/shape_toolbar01">
 
-        <!--back button-->
+        <!-- Nút quay lại -->
         <ImageButton
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
@@ -24,6 +24,7 @@
             android:padding="5dp"
             android:layout_margin="10dp"/>
 
+        <!-- Tiêu đề -->
         <TextView
             android:id="@+id/titleTv"
             android:layout_width="wrap_content"
@@ -34,7 +35,7 @@
             android:textColor="@color/white"
             android:layout_centerHorizontal="true"/>
 
-        <!--Shapeable image view with rounded corners for profile image-->
+        <!-- Hình ảnh hồ sơ -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/profileIv"
             android:layout_width="110dp"
@@ -48,6 +49,7 @@
 
     </RelativeLayout>
 
+    <!-- Form chỉnh sửa thông tin -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,7 +57,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginTop="225dp">
 
-        <!--EditText: Input Name-->
+        <!-- TextInputLayout và EditText cho tên -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/nameTil"
             android:layout_width="match_parent"
@@ -75,7 +77,7 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--Button: update profile-->
+        <!-- Button cập nhật -->
         <Button
             android:id="@+id/updateBtn"
             android:layout_width="match_parent"

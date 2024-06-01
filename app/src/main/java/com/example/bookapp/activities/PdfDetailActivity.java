@@ -40,51 +40,51 @@ import java.util.HashMap;
 
 public class PdfDetailActivity extends AppCompatActivity {
 
+    // Khai báo các biến cần thiết
     private ActivityPdfDetailBinding binding;
-
-    //pdf id, get from intent
     String bookId, bookTitle, bookUrl;
-
     boolean isInMyFavorite = false;
     private FirebaseAuth firebaseAuth;
     private static final String TAG_DOWNLOAD = "DOWNLOAD_TAG";
     private ProgressDialog progressDialog;
-
-    //arrayList to hold comments
     private ArrayList<ModelComment> commentArrayList;
-    //adapter to set to recyclerview;
     private AdapterComment adapterComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Đính kết view với layout
         binding = ActivityPdfDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //get data from intent e.g. bookId
+        // Lấy thông tin sách từ Intent
         Intent intent = getIntent();
         bookId = intent.getStringExtra("bookId");
 
-        //at start hide download button, because we need book url that we will load later in function loadBookDetails();
+        // Ẩn nút tải xuống
         binding.downloadBookBtn.setVisibility(View.GONE);
 
-        //init progress dialog
+        // Khởi tạo ProgressDialog
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setCanceledOnTouchOutside (false);
 
+        // Lấy FirebaseAuth instance
         firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() != null) {
+            // Kiểm tra sách có trong danh sách yêu thích không
             checkIsFavorite();
         }
 
+        // Tải thông tin chi tiết sách
         loadBookDetails();
+        // Tải các bình luận của sách
         loadComments();
 
-        //increment book view count, whenever this page starts
+        // Tăng lượt xem sách
         MyApplication.incrementBookViewCount(bookId);
 
-        //handle click, go back
+        // Xử lý sự kiện nhấn nút quay lại
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,86 +92,85 @@ public class PdfDetailActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, open to view pdf
+        // Xử lý sự kiện nhấn nút đọc sách
         binding.readBookBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Mở PdfViewActivity để đọc sách
                 Intent intent1 = new Intent(PdfDetailActivity.this, PdfViewActivity.class);
                 intent1.putExtra("bookId", bookId);
                 startActivity(intent1);
             }
         });
 
-        //handle click, download pdf
+        // Xử lý sự kiện nhấn nút tải xuống sách
         binding.downloadBookBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG_DOWNLOAD, "onClick: Checking permission");
+                // Kiểm tra quyền ghi vào bộ nhớ ngoài
                 if (ContextCompat.checkSelfPermission(PdfDetailActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
-                    Log.d(TAG_DOWNLOAD, "onClick: Permission already granted, can download book");
+                    // Nếu có quyền, tải sách
                     MyApplication.downloadBook(PdfDetailActivity.this, ""+bookId, ""+bookTitle,""+bookUrl);
                 }
                 else{
-                    Log.d(TAG_DOWNLOAD, "onClick: Permission was nit granted, request permission...");
+                    // Nếu không có quyền, yêu cầu cấp quyền
                     requestPermissionLauncher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 }
             }
         });
 
-        //handle click, add/remove favorite
+        // Xử lý sự kiện nhấn nút thêm vào/xóa khỏi danh sách yêu thích
         binding.favoriteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (firebaseAuth.getCurrentUser() == null) {
+                    // Nếu người dùng chưa đăng nhập, hiển thị thông báo
                     Toast.makeText(PdfDetailActivity.this, "You're not logged in", Toast.LENGTH_SHORT).show();
                 } else {
+                    // Nếu đã đăng nhập, thêm/xóa khỏi danh sách yêu thích
                     if (isInMyFavorite) {
-                        //in favorite, remove from favorite
                         MyApplication.removeFromFavorite(PdfDetailActivity.this, bookId);
                     } else {
-                        //not in favorite, add to favorite
                         MyApplication.addToFavorite(PdfDetailActivity.this, bookId);
                     }
                 }
             }
         });
 
-        //handle click, show comment add dialog
+        // Xử lý sự kiện nhấn nút thêm bình luận
         binding.addCommentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Requirements: User must be logged in to add comment*/
                 if (firebaseAuth.getCurrentUser() == null) {
+                    // Nếu người dùng chưa đăng nhập, hiển thị thông báo
                     Toast.makeText(PdfDetailActivity.this, "You're not logged in...", Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    // Nếu đã đăng nhập, hiển thị dialog để thêm bình luận
                     addCommentDialog();
                 }
             }
         });
     }
 
+    // Hàm tải các bình luận của sách
     private void loadComments() {
-        //init arraylist before adding data into it
         commentArrayList = new ArrayList<>();
 
-        //db path to load comments
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
         ref.child(bookId).child("Comments")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange (@NonNull DataSnapshot snapshot) {
-                        //clear arraylist before start adding data into it
+                        // Xóa danh sách bình luận cũ
                         commentArrayList.clear();
+                        // Thêm các bình luận mới vào danh sách
                         for (DataSnapshot ds: snapshot.getChildren()){
-                            //get data as model, spellings of variables in model must be as same as in firebase
                             ModelComment model = ds.getValue(ModelComment.class);
-                            //add to arraylist
                             commentArrayList.add(model);
                         }
-                        //setup adapter
+                        // Cập nhật AdapterComment với danh sách bình luận mới
                         adapterComment = new AdapterComment(PdfDetailActivity.this, commentArrayList);
-                        //set adapter to recyclerview
                         binding.commentsRv.setAdapter(adapterComment);
                     }
                     @Override
@@ -180,19 +179,17 @@ public class PdfDetailActivity extends AppCompatActivity {
                 });
     }
 
+    // Hàm hiển thị dialog để thêm bình luận
     private String comment = "";
-
     private void addCommentDialog() {
-        //inflate bind view for dialog
         DialogCommentAddBinding commentAddBinding = DialogCommentAddBinding.inflate(LayoutInflater.from(this));
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialog);
         builder.setView(commentAddBinding.getRoot());
 
-        //create and show alert dialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
 
-        //handle click, dismis dialog
+        // Xử lý sự kiện nhấn nút quay lại trên dialog
         commentAddBinding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -200,17 +197,18 @@ public class PdfDetailActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, add comment
+        // Xử lý sự kiện nhấn nút gửi bình luận
         commentAddBinding.submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //get data
+                // Lấy nội dung bình luận
                 comment = commentAddBinding.commentEt.getText().toString().trim();
-                //validate data
                 if (TextUtils.isEmpty(comment)){
+                    // Nếu bình luận trống, hiển thị thông báo
                     Toast.makeText(PdfDetailActivity.this, "Enter your comment...", Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    // Nếu có bình luận, đóng dialog và thêm bình luận
                     alertDialog.dismiss();
                     addComment();
                 }
@@ -219,99 +217,87 @@ public class PdfDetailActivity extends AppCompatActivity {
     }
 
     private void addComment() {
-        //show progress
+        // Hiển thị hộp thoại tiến trình để thông báo cho người dùng biết đang thêm bình luận
         progressDialog.setMessage("Adding comment...");
         progressDialog.show();
 
-        //timestamp for comment id, comment time
+        // Lấy thời gian hiện tại dưới dạng timestamp
         String timestamp = ""+System.currentTimeMillis();
 
-        //setup data to add in db for comment
+        // Tạo một HashMap để lưu trữ các thông tin liên quan đến bình luận
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("id", ""+timestamp);
-        hashMap.put("bookId", ""+bookId);
-        hashMap.put("timestamp", ""+timestamp);
-        hashMap.put("uid", ""+firebaseAuth.getUid());
-        hashMap.put("comment", ""+comment);
+        hashMap.put("id", ""+timestamp); // Sử dụng timestamp làm ID của bình luận
+        hashMap.put("bookId", ""+bookId); // ID của cuốn sách mà bình luận liên quan đến
+        hashMap.put("timestamp", ""+timestamp); // Timestamp của bình luận
+        hashMap.put("uid", ""+firebaseAuth.getUid()); // ID của người dùng đang thêm bình luận
+        hashMap.put("comment", ""+comment); // Nội dung bình luận
 
-        //DB path to add data into it
-        //Books bookId Comments commentId> commentData
+        // Lấy tham chiếu đến nút "Comments" trong Firebase Database
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
         ref.child(bookId).child("Comments").child(timestamp)
-                .setValue(hashMap)
+                .setValue(hashMap) // Thêm bình luận vào Firebase Database
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+                        // Nếu thêm bình luận thành công
                         Toast.makeText(PdfDetailActivity.this, "Comment Added...", Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
+                        progressDialog.dismiss(); // Ẩn hộp thoại tiến trình
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure (@NonNull Exception e) {
-                        //failed to add comment
-                        progressDialog.dismiss();
+                        // Nếu thêm bình luận thất bại
+                        progressDialog.dismiss(); // Ẩn hộp thoại tiến trình
                         Toast.makeText(PdfDetailActivity.this, "Failed to add comment due to "+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    //request storage permission
+    // Định nghĩa một ActivityResultLauncher để yêu cầu quyền từ người dùng
     private ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted ->{
-                if(isGranted){
+                if(isGranted){ // Nếu quyền được cấp
                     Log.d(TAG_DOWNLOAD, "Permission Granted");
+                    // Gọi hàm MyApplication.downloadBook() để tải xuống sách
                     MyApplication.downloadBook(this, ""+bookId, ""+bookTitle, ""+bookUrl);
                 }
-                else {
+                else { // Nếu quyền bị từ chối
                     Log.d(TAG_DOWNLOAD, "Permission was denied...:");
+                    // Hiển thị Toast thông báo quyền bị từ chối
                     Toast.makeText(this, "Permission was denied", Toast.LENGTH_SHORT).show();
                 }
             });
+
     private void loadBookDetails() {
+        // Lấy tham chiếu đến nút "Books" trong Firebase Database
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
+        // Lấy dữ liệu của cuốn sách có bookId tương ứng
         ref.child(bookId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //get data
+                        // Đọc các thuộc tính của cuốn sách
                         bookTitle =""+snapshot.child("title").getValue();
                         String description = ""+snapshot.child("description").getValue();
-                        String categoryId =""+snapshot.child("categoryId").getValue();
+                        String categoryTitle =""+snapshot.child("categoryTitle").getValue();
                         String viewsCount =""+snapshot.child("viewsCount").getValue();
                         String downloadsCount =""+snapshot.child("downloadsCount").getValue();
                         bookUrl =""+snapshot.child("url").getValue();
                         String timestamp =""+snapshot.child("timestamp").getValue();
 
-                        //required data is loaded, show download button
+                        // Hiển thị nút "Download Book"
                         binding.downloadBookBtn.setVisibility(View.VISIBLE);
 
-                        //format date
+                        // Định dạng thời gian
                         String date = MyApplication.formatTimestamp(Long.parseLong(timestamp));
 
-                        MyApplication.loadCategory(
-                                ""+categoryId,
-                                binding.categoryTv
-                        );
-                        MyApplication.loadPdfFromUrlSinglePage(
-                                ""+bookUrl,
-                                ""+bookTitle,
-                                binding.pdfView,
-                                binding.progressBar,
-                                null
-                        );
-                        MyApplication.loadPdfSize(
-                                ""+bookUrl,
-                                ""+bookTitle,
-                                binding.sizeTv
-                        );
-                        MyApplication.loadPdfPageCount(
-                                PdfDetailActivity.this,
-                                ""+bookUrl,
-                                binding.pagesTv
-                        );
+                        // Hiển thị các thông tin khác của cuốn sách
+                        MyApplication.loadCategory(""+categoryTitle, binding.categoryTv);
+                        MyApplication.loadPdfFromUrlSinglePage(""+bookUrl, ""+bookTitle, binding.pdfView, binding.progressBar, null);
+                        MyApplication.loadPdfSize(""+bookUrl, ""+bookTitle, binding.sizeTv);
+                        MyApplication.loadPdfPageCount(PdfDetailActivity.this, ""+bookUrl, binding.pagesTv);
 
-                        //set data
                         binding.titleTv.setText(bookTitle);
                         binding.descriptionTv.setText(description);
                         binding.viewsTv.setText(viewsCount.replace("null", "N/A"));
@@ -327,20 +313,22 @@ public class PdfDetailActivity extends AppCompatActivity {
     }
 
     private void checkIsFavorite (){
-        //logged in check if its in favorite list or not
+        // Lấy tham chiếu đến nút "Users" trong Firebase Database
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        // Lấy dữ liệu của danh sách yêu thích của người dùng
         reference.child(firebaseAuth.getUid()).child("Favorites").child(bookId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange (@NonNull DataSnapshot snapshot) {
-                        isInMyFavorite = snapshot.exists(); //true: if exists, false if not exists
-                        if (isInMyFavorite){
-                            //exists in favoirte
+                        // Kiểm tra xem cuốn sách có trong danh sách yêu thích hay không
+                        isInMyFavorite = snapshot.exists();
+                        if (isInMyFavorite){ // Nếu có trong danh sách yêu thích
+                            // Hiển thị nút "Remove Favorite"
                             binding.favoriteBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_favorite_white, 0, 0);
                             binding.favoriteBtn.setText("Remove Favorite");
                         }
-                        else {
-                            //not exists in favorite
+                        else { // Nếu không có trong danh sách yêu thích
+                            // Hiển thị nút "Add Favorite"
                             binding.favoriteBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_favorite_border_white, 0, 0);
                             binding.favoriteBtn.setText("Add Favorite");
                         }

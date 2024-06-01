@@ -31,13 +31,15 @@ import java.util.ArrayList;
 
 public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.HolderCategory> implements Filterable {
     private Context context;
+    //Danh sách các danh mục hiển thị và danh sách các danh mục dùng để lọc
     public ArrayList<ModelCategory> categoryArrayList, filterList;
 
     //view binding
     private RowCategoryBinding binding;
 
-    //instance of our filter class
+    //lớp để thực hiện lọc danh sách
     private FilterCategory filter;
+    //Constructor để khởi tạo adapter với context và danh sách các danh mục.
     public AdapterCategory (Context context, ArrayList<ModelCategory> categoryArrayList) {
         this.context = context;
         this.categoryArrayList = categoryArrayList;
@@ -81,12 +83,12 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.Holder
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
             }
         });
 
@@ -123,15 +125,15 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.Holder
                     public void onFailure (@NonNull Exception e) {
                         //failed to delete
                         Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                    }
+                });
     }
-
+    //Trả về số lượng danh mục trong danh sách
     @Override
     public int getItemCount() {
         return categoryArrayList.size();
     }
-
+    //Trả về đối tượng lọc cho danh mục, tạo mới nếu chưa có
     @Override
     public Filter getFilter() {
         if(filter == null){
@@ -140,7 +142,7 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.Holder
         return filter;
     }
 
-    /*View holder class to hold UI views for row_category.xml*/
+    /*View holder class để giữ các thành phần giao diện trong row_category.xml*/
     class HolderCategory extends RecyclerView.ViewHolder{
         TextView categoryTv;
         ImageButton deleteBtn;

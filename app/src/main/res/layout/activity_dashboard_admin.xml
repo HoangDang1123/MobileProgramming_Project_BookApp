@@ -8,14 +8,14 @@
     android:layout_height="match_parent"
     tools:context=".activities.DashboardAdminActivity">
 
-    <!--Toolbar-->
+    <!-- Thanh toolbar chứa các nút và tiêu đề -->
     <RelativeLayout
         android:id="@+id/toolbarRl"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:background="@drawable/shape_toolbar02">
 
-        <!--ImageButten: Open profile-->
+        <!-- Nút truy cập trang cá nhân -->
         <ImageButton
             android:id="@+id/profileBtn"
             android:layout_width="wrap_content"
@@ -25,6 +25,7 @@
             android:layout_marginStart="10dp"
             android:background="@android:color/transparent"/>
 
+        <!-- Tiêu đề chính của trang Dashboard Admin -->
         <TextView
             android:id="@+id/titleTv"
             android:layout_width="wrap_content"
@@ -34,6 +35,8 @@
             android:text="Dashboard Admin"
             android:textStyle="bold"
             android:textColor="@color/white"/>
+
+        <!-- Tiêu đề phụ, hiển thị email của người dùng -->
         <TextView
             android:id="@+id/subTitleTv"
             android:layout_width="wrap_content"
@@ -42,6 +45,8 @@
             android:layout_height="wrap_content"
             android:text="abc@example.com"
             android:textColor="@color/white"/>
+
+        <!-- Nút đăng xuất -->
         <ImageButton
             android:id="@+id/logoutBtn"
             android:layout_width="wrap_content"
@@ -54,7 +59,7 @@
 
     </RelativeLayout>
 
-    <!--Search-->
+    <!-- Ô nhập liệu cho tìm kiếm -->
     <EditText
         android:id="@+id/searchEt"
         android:layout_width="match_parent"
@@ -69,7 +74,7 @@
         android:background="@color/white"
         android:textColorHint="@color/gray01"/>
 
-    <!--Categories-->
+    <!-- RecyclerView để hiển thị danh sách các danh mục -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/categoriesRv"
         android:layout_width="match_parent"
@@ -80,6 +85,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_above="@id/bottomLl"/>
 
+    <!-- Layout chứa các nút ở phía dưới màn hình -->
     <LinearLayout
         android:id="@+id/bottomLl"
         android:layout_width="match_parent"
@@ -90,7 +96,7 @@
         android:layout_marginBottom="10dp"
         android:orientation="horizontal">
 
-        <!--Add Category-->
+        <!-- Nút thêm danh mục mới -->
         <Button
             android:id="@+id/addCategoryBtn"
             android:layout_width="0dp"
@@ -103,7 +109,7 @@
             android:textAllCaps="false"
             android:textColor="@color/white"/>
 
-        <!--Add PDF-->
+        <!-- Nút thêm PDF mới dưới dạng Floating Action Button -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/addPdfFab"
             android:layout_width="wrap_content"

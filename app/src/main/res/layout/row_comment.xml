@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- CardView để chứa nội dung của một bình luận -->
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="1dp"
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="5dp"
     app:cardElevation="0dp"
     app:contentPadding="8dp">
+
+    <!-- RelativeLayout chính để chứa các thành phần bên trong CardView -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!--ImageView: Profile of user of comment-->
+        <!-- ImageView: Ảnh đại diện của người bình luận -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/profileIv"
             android:layout_width="50dp"
@@ -24,18 +28,18 @@
             app:strokeWidth="1dp"
             app:shapeAppearanceOverlay="@style/styleCircleImage"/>
 
-        <!--TextView: Name of user of comment-->
+        <!-- TextView: Tên của người bình luận -->
         <TextView
             android:id="@+id/nameTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/profileIv"
-            android:text="Person Name"
             android:layout_toStartOf="@id/dateTv"
+            android:text="Person Name"
             android:textColor="@color/black"
             android:textSize="16sp"/>
 
-        <!--TextView: Date of comment added-->
+        <!-- TextView: Ngày bình luận được thêm -->
         <TextView
             android:id="@+id/dateTv"
             android:layout_width="wrap_content"
@@ -46,7 +50,7 @@
             android:textColor="@color/gray02"
             android:textSize="12sp"/>
 
-        <!--TextView: Comment-->
+        <!-- TextView: Nội dung bình luận -->
         <TextView
             android:id="@+id/commentTv"
             android:layout_width="wrap_content"

@@ -2,19 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/back01"
     tools:context=".activities.PdfAddActivity">
 
-    <!--Toolbar-->
+    <!-- Phần Toolbar -->
     <RelativeLayout
         android:id="@+id/toolbarRl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_toolbar01">
 
-        <!--Back button-->
+        <!-- Nút quay lại -->
         <ImageButton
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
@@ -24,16 +24,16 @@
             android:padding="5dp"
             android:src="@drawable/ic_back_white"/>
 
-        <!--Icon: Image-->
+        <!-- Biểu tượng ứng dụng -->
         <ImageView
             android:id="@+id/iconIv"
             android:layout_width="110dp"
             android:layout_height="110dp"
-            android:layout_centerHorizontal="true"
             android:layout_below="@id/backBtn"
+            android:layout_centerHorizontal="true"
             android:src="@drawable/logo"/>
 
-        <!--Title-->
+        <!-- Tiêu đề "Add a New Book" -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
             android:textColor="@color/white"
             android:textSize="28sp"/>
 
-        <!--Attach pdf button-->
+        <!-- Nút đính kèm -->
         <ImageButton
             android:id="@+id/attachBtn"
             android:layout_width="wrap_content"
@@ -58,7 +58,7 @@
 
     </RelativeLayout>
 
-    <!--Input Title-->
+    <!-- Phần nhập tiêu đề sách -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/titleTil"
         android:layout_width="match_parent"
@@ -84,7 +84,7 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!--Input Description-->
+    <!-- Phần nhập mô tả sách -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/descriptionTil"
         android:layout_width="match_parent"
@@ -110,7 +110,7 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!--Pick Category from dialog-->
+    <!-- Phần hiển thị danh mục sách -->
     <TextView
         android:id="@+id/categoryTv"
         android:layout_width="match_parent"
@@ -130,7 +130,7 @@
         android:textColor="@color/black"
         android:textSize="16sp"/>
 
-    <!--Button: upload pdf-->
+    <!-- Nút tải lên sách -->
     <Button
         android:id="@+id/submitBtn"
         android:layout_width="match_parent"

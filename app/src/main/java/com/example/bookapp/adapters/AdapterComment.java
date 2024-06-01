@@ -31,17 +31,13 @@ import java.util.ArrayList;
 
 public class AdapterComment extends RecyclerView.Adapter<AdapterComment.HolderComment> {
 
-    //context
     private Context context;
 
-    //arraylist to hold comments
     private ArrayList<ModelComment> commentArrayList;
     private FirebaseAuth firebaseAuth;
 
-    //view binding
     private RowCommentBinding binding;
 
-    //constructor
     public AdapterComment(Context context, ArrayList<ModelComment> commentArrayList) {
         this.context = context;
         this.commentArrayList = commentArrayList;
@@ -49,20 +45,20 @@ public class AdapterComment extends RecyclerView.Adapter<AdapterComment.HolderCo
         firebaseAuth = FirebaseAuth.getInstance();
     }
 
+    // Hàm onCreateViewHolder() được gọi khi RecyclerView cần tạo một ViewHolder mới
     @NonNull
     @Override
     public HolderComment onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //inflate/bind the view xml
+        // Inflate the layout for each item in the RecyclerView
         binding = RowCommentBinding.inflate(LayoutInflater.from(context), parent, false);
 
         return new HolderComment(binding.getRoot());
     }
 
+    // Hàm onBindViewHolder() được gọi để liên kết dữ liệu với một ViewHolder
     @Override
     public void onBindViewHolder(@NonNull HolderComment holder, int position) {
-        /*---Get data from specific position of list, set data, handle click etc.*/
-
-        //get data
+        // Lấy thông tin của comment tại vị trí position
         ModelComment modelComment = commentArrayList.get(position);
         String id = modelComment.getId();
         String bookId = modelComment.getBookId();
@@ -70,39 +66,37 @@ public class AdapterComment extends RecyclerView.Adapter<AdapterComment.HolderCo
         String uid = modelComment.getUid();
         String timestamp = modelComment.getTimestamp();
 
-        //format date, already made function in MyApplication class
-        String date = MyApplication.formatTimestamp(Long.parseLong (timestamp));
-
-        //set data
+        // Hiển thị thông tin comment
+        String date = MyApplication.formatTimestamp(Long.parseLong(timestamp));
         holder.dateTv.setText(date);
         holder.commentTv.setText(comment);
 
-        //we don't have user's name, profile picture, so we will load it using uid we stored in each comment
+        // Tải thông tin người dùng
         loadUserDetails(modelComment, holder);
 
-        //handle click, show option to delete comment
+        // Xử lý sự kiện click vào comment
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Requirements to delete a comment
-                1) User must be logged in
-                2) vid in comment (to be deleted) must be same as vid of logged in user*/
-                if (firebaseAuth.getCurrentUser() != null && uid.equals(firebaseAuth.getUid())){
+                // Nếu người dùng đang đăng nhập và là chủ sở hữu của comment
+                if (firebaseAuth.getCurrentUser() != null && uid.equals(firebaseAuth.getUid())) {
+                    // Xóa comment
                     deleteComment(modelComment, holder);
                 }
             }
         });
     }
 
-    private void deleteComment (ModelComment modelComment, HolderComment holder) {
-        //show confirm dialog before deleting comment
+    // Hàm xóa comment
+    private void deleteComment(ModelComment modelComment, HolderComment holder) {
+        // Hiển thị thông báo xác nhận xóa comment
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Delete Comment")
                 .setMessage("Are you sure you want to delete this comment?")
                 .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //Delete from dialog clicked, begin delete
+                        // Xóa comment khỏi Firebase Database
                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
                         ref.child(modelComment.getBookId())
                                 .child("Comments")
@@ -111,13 +105,15 @@ public class AdapterComment extends RecyclerView.Adapter<AdapterComment.HolderCo
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
+                                        // Hiển thị thông báo xóa thành công
                                         Toast.makeText(context, "Deleted...", Toast.LENGTH_SHORT).show();
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
-                                    public void onFailure (@NonNull Exception e) {
-                                        Toast.makeText(context, "Failed to delete due to "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Hiển thị thông báo xóa thất bại
+                                        Toast.makeText(context, "Failed to delete due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 });
                     }
@@ -125,61 +121,64 @@ public class AdapterComment extends RecyclerView.Adapter<AdapterComment.HolderCo
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //cancle clicked
+                        // Hủy bỏ xóa comment
                         dialogInterface.dismiss();
                     }
                 })
                 .show();
     }
 
-    private void loadUserDetails (ModelComment modelComment, HolderComment holder) {
+    // Hàm tải thông tin người dùng
+    private void loadUserDetails(ModelComment modelComment, HolderComment holder) {
         String uid = modelComment.getUid();
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users"); ref.child(uid)
+        // Tải thông tin người dùng từ Firebase Database
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.child(uid)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //get data
-                        String name = ""+snapshot.child("name").getValue();
-                        String profileImage = ""+snapshot.child("profileImage").getValue();
+                        // Lấy tên và hình ảnh của người dùng
+                        String name = "" + snapshot.child("name").getValue();
+                        String profileImage = "" + snapshot.child("profileImage").getValue();
 
-                        //set data
+                        // Hiển thị thông tin người dùng
                         holder.nameTv.setText(name);
                         try {
                             Glide.with(context)
                                     .load(profileImage)
-                                    .placeholder (R.drawable.ic_personal_gray)
+                                    .placeholder(R.drawable.ic_personal_gray)
                                     .into(holder.profileIv);
-                        }
-                        catch (Exception e){
+                        } catch (Exception e) {
                             holder.profileIv.setImageResource(R.drawable.ic_personal_gray);
                         }
                     }
+
                     @Override
-                    public void onCancelled (@NonNull DatabaseError error) {
+                    public void onCancelled(@NonNull DatabaseError error) {
                     }
                 });
     }
 
+    // Hàm trả về số lượng comment
     @Override
     public int getItemCount() {
-        return commentArrayList.size(); //return comments size, number of records
+        return commentArrayList.size();
     }
 
-    //view holder class for row_comment.xml
+    // ViewHolder để hiển thị thông tin của mỗi comment
     class HolderComment extends RecyclerView.ViewHolder {
 
-        //ui views of row_comment.xml
         ShapeableImageView profileIv;
         TextView nameTv, dateTv, commentTv;
+
         public HolderComment(@NonNull View itemView) {
             super(itemView);
 
-            //init ui views
             profileIv = binding.profileIv;
             nameTv = binding.nameTv;
             dateTv = binding.dateTv;
             commentTv = binding.commentTv;
+        }
     }
-}
 }

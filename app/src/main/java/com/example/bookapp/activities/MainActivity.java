@@ -10,16 +10,17 @@ import com.example.bookapp.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    //view binding
+    //Khai báo biến binding kiểu ActivityMainBinding để sử dụng View Binding
     private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Sử dụng View Binding để thiết lập giao diện
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //handle loginBtn click, start login screen
+        // Xử lý sự kiện khi bấm vào nút loginBtn, mở màn hình login
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v){
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //handle skipBtn click, start continue without login screen
+        //Xử lý sự kiện khi bấm vào nút skipBtn, chuyen sang giao dien DashboardUser
         binding.skipBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

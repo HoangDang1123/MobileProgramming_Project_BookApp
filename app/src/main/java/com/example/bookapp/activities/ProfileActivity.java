@@ -11,15 +11,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.bookapp.MyApplication;
 import com.example.bookapp.R;
 import com.example.bookapp.adapters.AdapterPdfFavorite;
-import com.example.bookapp.adapters.AdapterPdfUser;
 import com.example.bookapp.databinding.ActivityProfileBinding;
 import com.example.bookapp.models.ModelPdf;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,26 +29,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.checkerframework.checker.units.qual.A;
-
 import java.util.ArrayList;
 
 public class ProfileActivity extends AppCompatActivity {
-    //view binding
-    private ActivityProfileBinding binding;
+    private ActivityProfileBinding binding; // Binding đối tượng giao diện người dùng
 
-    //firebase auth, for loading user data using user uid
-    private FirebaseAuth firebaseAuth;
-    private FirebaseUser firebaseUser;
+    private FirebaseAuth firebaseAuth; // Đối tượng xác thực Firebase
+    private FirebaseUser firebaseUser; // Người dùng Firebase hiện tại
 
-    //arraylist to hold the books
-    private ArrayList<ModelPdf> pdfArrayList;
-    //adapter to set in recyclerview
-    private AdapterPdfFavorite adapterPdfFavorite;
+    private ArrayList<ModelPdf> pdfArrayList; // Danh sách sách yêu thích
+    private AdapterPdfFavorite adapterPdfFavorite; // Bộ điều hợp danh sách sách yêu thích
     //progress dialog
-    private ProgressDialog progressDialog;
+    private ProgressDialog progressDialog; // Hộp thoại hiển thị tiến trình
 
-    private static final String TAG = "PROFILE_TAG";
+    private static final String TAG = "PROFILE_TAG"; // Tag đăng ký
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,26 +50,24 @@ public class ProfileActivity extends AppCompatActivity {
         binding = ActivityProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //reset data of user info
+        // Thiết lập các giá trị mặc định cho các view
         binding.accountTypeTv.setText("N/A");
         binding.memberDateTv.setText("N/A");
         binding.favoriteBookCountTv.setText("N/A");
         binding.accountStatusTv.setText("N/A");
 
-        //setup firebase auth
-        firebaseAuth = FirebaseAuth.getInstance();
-        //get current user
-        firebaseUser = firebaseAuth.getCurrentUser();
+        firebaseAuth = FirebaseAuth.getInstance(); // Lấy đối tượng xác thực Firebase
+        firebaseUser = firebaseAuth.getCurrentUser(); // Lấy người dùng Firebase hiện tại
 
-        //init/setup progress dialog
+        // Thiết lập hộp thoại tiến trình
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setCanceledOnTouchOutside(false);
 
-        loadUserInfo();
-        loadFavoriteBooks();
+        loadUserInfo(); // Tải thông tin người dùng
+        loadFavoriteBooks(); // Tải danh sách sách yêu thích
 
-        //handle click, go back
+        // Xử lý sự kiện click nút quay lại
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,7 +75,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, start profile edit page
+        // Xử lý sự kiện click nút chỉnh sửa hồ sơ
         binding.profileEditBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,32 +83,29 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, verify user if not
+        // Xử lý sự kiện click trạng thái tài khoản
         binding.accountStatusTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(firebaseUser.isEmailVerified()){
-                    //already verified
                     Toast.makeText(ProfileActivity.this, "Already verified...", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    //not verified, show confirmation dialog first
-                    emailVerificationDialog();
+                    emailVerificationDialog(); // Hiển thị hộp thoại xác minh email
                 }
             }
         });
     }
 
-
+    // Hiển thị hộp thoại xác minh email
     private void emailVerificationDialog() {
-        //Alert dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Verify Email")
-                .setMessage("Are you sure you want to send email verification instructions to your email"+firebaseUser.getEmail())
+                .setMessage("Are you sure you want to send email verification instructions to your email "+firebaseUser.getEmail())
                 .setPositiveButton("SEND", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        firebaseUser.sendEmailVerification();
+                        sendEmailVerification(); // Gửi email xác minh
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener(){
@@ -131,8 +117,9 @@ public class ProfileActivity extends AppCompatActivity {
                 .show();
     }
 
+    // Gửi email xác minh
     private void sendEmailVerification() {
-        //show progress
+        // Hiển thị hộp thoại tiến trình
         progressDialog.setMessage("Sending email verification instruction to your email"+firebaseUser.getEmail());
         progressDialog.show();
 
@@ -140,7 +127,6 @@ public class ProfileActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>(){
                     @Override
                     public void onSuccess(Void unused){
-                        //successfully sent
                         progressDialog.dismiss();
                         Toast.makeText(ProfileActivity.this, "Instructions sent, check your email"+firebaseUser.getEmail(), Toast.LENGTH_SHORT).show();
                     }
@@ -148,29 +134,31 @@ public class ProfileActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        //failed to send
+                        // Xử lý lỗi
                         progressDialog.dismiss();
                         Toast.makeText(ProfileActivity.this, "Faileddue to "+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
+    // Tải thông tin người dùng
     private void loadUserInfo(){
         Log.d(TAG, "LoadUserInfo: Loading user info of user " + firebaseAuth.getUid());
 
-        //get email verification status, after verification you have to re login to get changes...
+        // Hiển thị trạng thái tài khoản
         if (firebaseUser.isEmailVerified()) {
             binding.accountStatusTv.setText("Verified");
         } else {
             binding.accountStatusTv.setText("Not Verified");
         }
 
+        // Lấy thông tin người dùng từ Firebase
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.child(firebaseAuth.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //get all info of user here from snapshot
+                        // Cập nhật thông tin người dùng lên giao diện
                         String email = "" + snapshot.child("email").getValue();
                         String name = "" + snapshot.child("name").getValue();
                         String profileImage = "" + snapshot.child("profileImage").getValue();
@@ -178,16 +166,14 @@ public class ProfileActivity extends AppCompatActivity {
                         String uid = "" + snapshot.child("uid").getValue();
                         String userType = "" + snapshot.child("userType").getValue();
 
-                        //format date to dd/MM/yyyy
                         String formattedDate = MyApplication.formatTimestamp(Long.parseLong(timestamp));
 
-                        //set data to ui
                         binding.emailTv.setText(email);
                         binding.nameTv.setText(name);
                         binding.memberDateTv.setText(formattedDate);
                         binding.accountTypeTv.setText(userType);
 
-                        // set image, use Glide
+                        // Tải ảnh đại diện người dùng
                         if (!profileImage.equals("")) {
                             Glide.with(ProfileActivity.this)
                                     .load(profileImage)
@@ -208,43 +194,45 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 
+    // Tải danh sách sách yêu thích
     private void loadFavoriteBooks() {
-        //init list
+        // Khởi tạo danh sách sách yêu thích
         pdfArrayList = new ArrayList<>();
 
-        //load favorite books from database
-        //Users > userId > Favorites
+        // Lấy danh sách sách yêu thích từ Firebase
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
         ref.child(firebaseAuth.getUid()).child("Favorites")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //clear list before starting adding data
+                        // Xóa danh sách sách yêu thích cũ
                         pdfArrayList.clear();
-                        for (DataSnapshot ds: snapshot.getChildren()) {
-                            //we will only get the bookId here, and we got other details in adapter using that bookId
+
+                        // Lặp qua các sách yêu thích trong Firebase
+                        for (DataSnapshot ds : snapshot.getChildren()) {
+                            // Lấy ID của sách yêu thích
                             String bookId = "" + ds.child("bookId").getValue();
 
-                            //set id to model
+                            // Tạo một đối tượng ModelPdf mới
                             ModelPdf modelPdf = new ModelPdf();
                             modelPdf.setId(bookId);
 
-                            //add model to list
+                            // Thêm đối tượng modelPdf vào danh sách pdfArrayList
                             pdfArrayList.add(modelPdf);
                         }
 
-                        //set number of favorite books
-                        binding.favoriteBookCountTv.setText("" + pdfArrayList.size());//can't set int/long to textview so concatnate with string
-                        //setup adapter
+                        // Cập nhật số lượng sách yêu thích
+                        binding.favoriteBookCountTv.setText("" + pdfArrayList.size());
+
+                        // Tạo một AdapterPdfFavorite mới và gán vào booksRv
                         adapterPdfFavorite = new AdapterPdfFavorite(ProfileActivity.this, pdfArrayList);
                         binding.booksRv.setLayoutManager(new LinearLayoutManager(ProfileActivity.this));
-                        //set adapter to recyclerview
                         binding.booksRv.setAdapter(adapterPdfFavorite);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-
+                        // Xử lý lỗi khi lấy dữ liệu từ Firebase
                     }
                 });
     }

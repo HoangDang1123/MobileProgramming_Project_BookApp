@@ -38,7 +38,7 @@ public class PdfListAdminActivity extends AppCompatActivity {
         binding = ActivityPdfListAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //get data from intent
+        //Lấy dữ liệu từ Intent
         Intent intent = getIntent();
         categoryId = intent.getStringExtra("categoryId");
         categoryTitle = intent.getStringExtra("categoryTitle");
@@ -47,13 +47,13 @@ public class PdfListAdminActivity extends AppCompatActivity {
 
         loadPdfList();
 
-        //search
+        //tìm kiếm
         binding.searchEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
-
+            //Sử dụng bộ lọc của adapterPdfAdmin để lọc danh sách các tệp PDF
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
@@ -71,30 +71,30 @@ public class PdfListAdminActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, go to previous activity
+        //xử lý khi nhấn nút back , chuyển đến activity trước đó
         binding.backBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick (View v){
-
                 onBackPressed();
             }
         });
     }
 
     private void loadPdfList() {
-        //init list before adding data
+        //danh sách trước khi thêm dữ liệu
         pdfArrayList = new ArrayList<>();
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference ( "Books");
+        //Lấy các tệp PDF thuộc về danh mục hiện tại
         ref.orderByChild("categoryId").equalTo(categoryId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         pdfArrayList.clear();
                         for (DataSnapshot ds : snapshot.getChildren()) {
-                            //get data
+                            //lấy dữ liệu
                             ModelPdf model = ds.getValue(ModelPdf.class);
-                            //add to list
+                            //Thêm vào danh sách
                             pdfArrayList.add(model);
 
                             Log.d(TAG, "onChange: "+model.getId()+""+model.getTitle());

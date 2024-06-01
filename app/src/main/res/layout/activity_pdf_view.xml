@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -7,14 +8,14 @@
     android:layout_height="match_parent"
     tools:context=".activities.PdfViewActivity">
 
-    <!--Toolbar-->
+    <!-- Toolbar -->
     <RelativeLayout
         android:id="@+id/toolbarRl"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:background="@drawable/shape_toolbar02">
 
-        <!--Back button-->
+        <!-- Nút quay lại -->
         <ImageButton
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
@@ -24,7 +25,7 @@
             android:background="@android:color/transparent"
             android:src="@drawable/ic_back_white"/>
 
-        <!--TextView: Title-->
+        <!-- Tiêu đề -->
         <TextView
             android:id="@+id/toolbarTitleTv"
             android:layout_width="wrap_content"
@@ -35,7 +36,7 @@
             android:textColor="@color/white"
             android:textStyle="bold"/>
 
-        <!--TextView: Subtitle e.g. page number-->
+        <!-- Tiêu đề phụ -->
         <TextView
             android:id="@+id/toolbarSubtitleTv"
             android:layout_width="wrap_content"
@@ -48,18 +49,18 @@
 
     </RelativeLayout>
 
-    <!--PdfView: Load Pdf-->
+    <!-- Hiển thị PDF -->
     <com.github.barteksc.pdfviewer.PDFView
         android:id="@+id/pdfView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbarRl"/>
 
-    <!--ProgresssBar: Show while pdf/book is loading from firebase -->
-        <ProgressBar
+    <!-- Thanh tiến trình -->
+    <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>
 
-    </RelativeLayout>
+</RelativeLayout>

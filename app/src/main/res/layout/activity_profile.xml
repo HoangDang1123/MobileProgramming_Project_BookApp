@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-acto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.ProfileActivity">
 
+    <!-- Background -->
     <View
         android:layout_width="match_parent"
         android:layout_height="165dp"
         android:layout_marginTop="40dp"
         android:background="@drawable/back02"/>
 
-    <!--Toolbar-->
+    <!-- Toolbar -->
     <RelativeLayout
         android:id="@+id/toolbarRL"
         android:layout_width="match_parent"
         android:background="@drawable/shape_toolbar02"
         android:layout_height="?actionBarSize">
 
+        <!-- Nút quay lại -->
         <ImageButton
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
@@ -28,6 +30,7 @@
             android:background="@android:color/transparent"
             android:src="@drawable/ic_back_white"/>
 
+        <!-- Tiêu đề -->
         <TextView
             android:id="@+id/titleTv"
             android:layout_width="wrap_content"
@@ -36,6 +39,8 @@
             android:text="Profile"
             android:textColor="@color/white"
             android:textStyle="bold" />
+
+        <!-- Nút chỉnh sửa -->
         <ImageButton
             android:id="@+id/profileEditBtn"
             android:layout_width="wrap_content"
@@ -48,13 +53,14 @@
 
     </RelativeLayout>
 
+    <!-- Background cho phần profile -->
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/shape_rect01"
         android:layout_marginTop="188dp"/>
-    <!--Shapeable image view with rounded corners for profile image-->
 
+    <!-- Ảnh đại diện -->
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/profileIv"
         android:layout_width="120dp"
@@ -64,6 +70,8 @@
         android:background="@color/white"
         android:src="@drawable/ic_personal_gray"
         app:shapeAppearance="@style/styleRoundCornersImage"/>
+
+    <!-- Tên -->
     <TextView
         android:id="@+id/nameTv"
         android:layout_width="wrap_content"
@@ -76,6 +84,7 @@
         android:textSize="18sp"
         android:textStyle="bold"/>
 
+    <!-- Email -->
     <TextView
         android:id="@+id/emailTv"
         android:layout_width="wrap_content"
@@ -86,6 +95,7 @@
         android:textColor="@color/black"
         android:textSize="12sp"/>
 
+    <!-- Chi tiết tài khoản -->
     <LinearLayout
         android:id="@+id/detailsLl"
         android:layout_width="match_parent"
@@ -94,7 +104,7 @@
         android:layout_below="@id/emailTv"
         android:layout_marginTop="8dp">
 
-        <!--Account-->
+        <!-- Loại tài khoản -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -122,7 +132,7 @@
 
         </LinearLayout>
 
-        <!--Member Since-->
+        <!-- Ngày thành viên -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -150,7 +160,7 @@
 
         </LinearLayout>
 
-        <!--Favorite Book count-->
+        <!-- Số sách yêu thích -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -178,7 +188,7 @@
 
         </LinearLayout>
 
-        <!--Account Status-->
+        <!-- Trạng thái tài khoản -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -188,6 +198,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
                 android:text="Account Status"
                 android:textColor="@color/black"
                 android:textStyle="bold"
@@ -206,6 +217,7 @@
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Đường kẻ -->
     <View
         android:id="@+id/view1"
         android:layout_marginTop="8dp"
@@ -213,7 +225,8 @@
         android:layout_height="1dp"
         android:background="@color/gray03"
         android:layout_below="@id/detailsLl"/>
-    
+
+    <!-- Tiêu đề Sách Yêu Thích -->
     <TextView
         android:id="@+id/favoriteBooksLabelTv"
         android:layout_width="wrap_content"
@@ -224,6 +237,7 @@
         android:textColor="@color/black"
         android:textStyle="bold"/>
 
+    <!-- RecyclerView cho sách yêu thích -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/booksRv"
         android:layout_width="match_parent"

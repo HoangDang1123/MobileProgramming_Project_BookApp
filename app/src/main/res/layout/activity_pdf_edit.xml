@@ -7,13 +7,13 @@
     android:layout_height="match_parent"
     tools:context=".activities.PdfEditActivity">
 
-    <!--Toolbar-->
+    <!-- Toolbar -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:background="@drawable/shape_toolbar01">
 
-        <!--Back button-->
+        <!-- Nút quay lại -->
         <ImageButton
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
@@ -23,7 +23,7 @@
             android:padding="5dp"
             android:layout_margin="10dp"/>
 
-        <!--Logo-->
+        <!-- Logo -->
         <ImageView
             android:id="@+id/iconIv"
             android:layout_width="110dp"
@@ -32,8 +32,7 @@
             android:layout_marginTop="40dp"
             android:src="@drawable/logo"/>
 
-        <!--Title-->
-
+        <!-- Tiêu đề -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,8 +46,7 @@
 
     </RelativeLayout>
 
-    <!--Scroll View-->
-
+    <!-- ScrollView chứa nội dung chỉnh sửa -->
     <ScrollView
         android:layout_marginTop="255dp"
         android:layout_width="match_parent"
@@ -57,7 +55,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <!--Input Book Title-->
+
+            <!-- Tiêu đề sách -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@id/titleTil"
                 android:layout_width="match_parent"
@@ -82,7 +81,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--Input Book Description-->
+            <!-- Mô tả sách -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@id/descriptionTil"
                 android:layout_width="match_parent"
@@ -110,7 +109,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--Pick Book Category-->
+            <!-- Danh mục sách -->
             <TextView
                 android:id="@+id/categoryTv"
                 android:layout_width="match_parent"
@@ -130,7 +129,7 @@
                 android:textColorHint="@color/gray01"
                 android:textSize="16sp"/>
 
-            <!--Update book info-->
+            <!-- Nút cập nhật -->
             <Button
                 android:id="@+id/submitBtn"
                 android:layout_width="match_parent"
@@ -143,10 +142,8 @@
                 android:layout_below="@id/categoryTv"
                 android:textColor="@color/white"/>
 
-
         </RelativeLayout>
 
     </ScrollView>
-
 
 </RelativeLayout>

@@ -26,7 +26,6 @@ import com.google.firebase.storage.StorageReference;
 
 public class PdfViewActivity extends AppCompatActivity {
 
-    //view binding
     private ActivityPdfViewBinding binding;
     private String bookId;
     private static final String TAG ="PDF_VIEW_TAG";
@@ -37,13 +36,15 @@ public class PdfViewActivity extends AppCompatActivity {
         binding = ActivityPdfViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //get bookId from intent that we passed in intent
+        // Lấy bookId từ intent
         Intent intent = getIntent();
         bookId = intent.getStringExtra("bookId");
         Log.d(TAG, "onCreate: BookId: "+bookId);
 
+        // Tải thông tin sách
         loadBookDetails();
-        //handle click, go back
+
+        // Xử lý sự kiện khi nhấn nút back
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,18 +55,16 @@ public class PdfViewActivity extends AppCompatActivity {
 
     private void loadBookDetails() {
         Log.d(TAG, "loadBookDetails: Get Pdf URL from db...");
-        //Database Reference to get book details e.g.get book url using book id
-        //Step (1) Get Book Url using Book Id
+        // Bước 1: Lấy URL PDF từ cơ sở dữ liệu Firebase dựa trên bookId
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
         ref.child(bookId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //get book url
                         String pdfUrl = ""+snapshot.child("url").getValue();
                         Log.d(TAG, "onDataChange: PDF URL: "+pdfUrl);
 
-                        //Step (2) Load Pdf using that url from firebase storage
+                        // Bước 2: Tải PDF từ URL đó trên Firebase Storage
                         loadBookFromUrl(pdfUrl);
                     }
 
@@ -83,15 +82,14 @@ public class PdfViewActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
                     public void onSuccess(byte[] bytes) {
-                        //load pdf using bytes
+                        // Hiển thị PDF lên view
                         binding.pdfView.fromBytes(bytes)
-                                .swipeHorizontal(false) //set false to scroll vertical, set true to swipe horizontal
+                                .swipeHorizontal(false)
                                 .onPageChange(new OnPageChangeListener() {
                                     @Override
                                     public void onPageChanged(int page, int pageCount) {
-                                        //set current and total pages in toolbar subtitle
                                         int currentPage = (page + 1);
-                                        binding.toolbarSubtitleTv.setText(currentPage+ "/" + pageCount); //e.g. 3/290
+                                        binding.toolbarSubtitleTv.setText(currentPage+ "/" + pageCount);
                                         Log.d(TAG, "onPageChanged: "+currentPage+ "/" + pageCount);
                                     }
                                 })
@@ -117,11 +115,8 @@ public class PdfViewActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG,"onFailure: "+e.getMessage());
-                        //failed to load book
                         binding.progressBar.setVisibility(View.GONE);
                     }
                 });
     }
-
-
 }

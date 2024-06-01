@@ -8,14 +8,12 @@
     android:layout_height="match_parent"
     tools:context=".activities.DashboardUserActivity">
 
-    <!--Toolbar-->
     <RelativeLayout
         android:id="@+id/toolbarRl"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:background="@drawable/shape_toolbar02">
 
-        <!--ImageButten: Open profile-->
         <ImageButton
             android:id="@+id/profileBtn"
             android:layout_width="wrap_content"
@@ -54,7 +52,6 @@
 
     </RelativeLayout>
 
-    <!--Tabs-->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
@@ -68,8 +65,6 @@
         app:tabMode="scrollable"
         app:tabUnboundedRipple="false"/>
 
-
-    <!--ViewPager: Swipe/ Show/ Change fragments-->
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"

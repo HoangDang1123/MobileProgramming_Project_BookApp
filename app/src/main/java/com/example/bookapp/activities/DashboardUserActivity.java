@@ -30,131 +30,140 @@ import java.util.ArrayList;
 
 public class DashboardUserActivity extends AppCompatActivity {
 
-    //to show in tabs
-    public ArrayList<ModelCategory> categoryArrayList;
-    public ViewPagerAdapter viewPagerAdapter;
-    private ActivityDashboardUserBinding binding;
+    // Khai báo các biến cần thiết
+    public ArrayList<ModelCategory> categoryArrayList; // Danh sách các danh mục
+    public ViewPagerAdapter viewPagerAdapter; // Adapter cho ViewPager
+    private ActivityDashboardUserBinding binding; // Binding layout
 
-    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth firebaseAuth; // Xác thực Firebase
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Inflate layout
         binding = ActivityDashboardUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Lấy instance của FirebaseAuth
         firebaseAuth = firebaseAuth.getInstance();
+        // Kiểm tra người dùng hiện tại
         checkUser();
 
+        // Thiết lập ViewPagerAdapter
         setupViewPagerAdapter(binding.viewPager);
+        // Liên kết TabLayout và ViewPager
         binding.tabLayout.setupWithViewPager(binding.viewPager);
 
+        // Xử lý sự kiện click logout
         binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Đăng xuất khỏi Firebase Auth
                 firebaseAuth.signOut();
+                // Chuyển sang màn hình chính
                 startActivity(new Intent(DashboardUserActivity.this, MainActivity.class));
+                // Kết thúc activity
                 finish();
             }
         });
 
+        // Xử lý sự kiện click profile
         binding.profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Chuyển sang màn hình profile
                 startActivity(new Intent(DashboardUserActivity.this, ProfileActivity.class));
             }
         });
     }
 
-    private void setupViewPagerAdapter(ViewPager viewPager){
+    private void setupViewPagerAdapter(ViewPager viewPager) {
+        // Khởi tạo ViewPagerAdapter
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, this);
 
+        // Khởi tạo danh sách các danh mục
         categoryArrayList = new ArrayList<>();
 
-        //load categories from firebase
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Categories"); //be careful of spellings\
+        // Lấy dữ liệu danh mục từ Firebase Database
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Categories");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                //clear before adding to list
+                // Xóa danh sách trước khi thêm mới
                 categoryArrayList.clear();
 
-                /*Load Categories - Static e.g. All, Most Viewed, Most Downloaded */
-                //Add data to models
+                // Thêm các danh mục mặc định
                 ModelCategory modelAll = new ModelCategory("01", "All", " ", 1);
                 ModelCategory modelMostViewed = new ModelCategory("02", "Most Viewed", " ", 1);
                 ModelCategory modelMostDownloaded = new ModelCategory("03", "Most Downloaded", " ", 1);
-                //add data to view pager adapter
                 categoryArrayList.add(modelAll);
                 viewPagerAdapter.addFragment(BooksUserFragment.newInstance(
-                        ""+modelAll.getId(),
-                        ""+modelAll.getCategory(),
-                        ""+modelAll.getUid()
+                        "" + modelAll.getId(),
+                        "" + modelAll.getCategory(),
+                        "" + modelAll.getUid()
                 ), modelAll.getCategory());
                 viewPagerAdapter.addFragment(BooksUserFragment.newInstance(
-                        ""+modelMostViewed.getId(),
-                        ""+modelMostViewed.getCategory(),
-                        ""+modelMostViewed.getUid()
+                        "" + modelMostViewed.getId(),
+                        "" + modelMostViewed.getCategory(),
+                        "" + modelMostViewed.getUid()
                 ), modelMostViewed.getCategory());
                 viewPagerAdapter.addFragment(BooksUserFragment.newInstance(
-                        ""+modelMostDownloaded.getId(),
-                        ""+modelMostDownloaded.getCategory(),
-                        ""+modelMostDownloaded.getUid()
+                        "" + modelMostDownloaded.getId(),
+                        "" + modelMostDownloaded.getCategory(),
+                        "" + modelMostDownloaded.getUid()
                 ), modelMostDownloaded.getCategory());
-                //refresh list
+
+                // Cập nhật ViewPagerAdapter
                 viewPagerAdapter.notifyDataSetChanged();
 
-                //Now Load from firebase
-                for (DataSnapshot ds: snapshot.getChildren()){
-                    //get data
+                // Lặp qua các danh mục trong Firebase Database
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    // Lấy thông tin danh mục
                     ModelCategory model = ds.getValue(ModelCategory.class);
-                    //add data to list
                     categoryArrayList.add(model);
-                    //add data to viewPagerAdapter
+
+                    // Thêm danh mục vào ViewPagerAdapter
                     viewPagerAdapter.addFragment(BooksUserFragment.newInstance(
-                            ""+ model.getId(),
-                            ""+ model.getCategory(),
-                            ""+ model.getUid()), model.getCategory());
-                    //refresh list
+                            "" + model.getId(),
+                            "" + model.getCategory(),
+                            "" + model.getUid()), model.getCategory());
                     viewPagerAdapter.notifyDataSetChanged();
                 }
-
-
             }
 
             @Override
-            public void onCancelled( DatabaseError error) {
+            public void onCancelled(DatabaseError error) {
 
             }
         });
-
-        //set adapter to view pager
+        // Liên kết ViewPager với ViewPagerAdapter
         viewPager.setAdapter(viewPagerAdapter);
     }
 
-    public class ViewPagerAdapter extends FragmentPagerAdapter{
+    // Lớp ViewPagerAdapter để quản lý các Fragment
+    public class ViewPagerAdapter extends FragmentPagerAdapter {
 
         private ArrayList<BooksUserFragment> fragmentList = new ArrayList<>();
         private ArrayList<String> fragmentTitleList = new ArrayList<>();
         private Context context;
-        public ViewPagerAdapter( FragmentManager fm, int behavior, Context context) {
+
+        public ViewPagerAdapter(FragmentManager fm, int behavior, Context context) {
             super(fm, behavior);
             this.context = context;
         }
 
         @Override
-        public Fragment getItem(int position){
+        public Fragment getItem(int position) {
             return fragmentList.get(position);
         }
+
         @Override
-        public int getCount(){
+        public int getCount() {
             return fragmentList.size();
         }
 
-        private void addFragment(BooksUserFragment fragment, String title){
-            //add fragment passed as parameter in fragmentList
+        private void addFragment(BooksUserFragment fragment, String title) {
             fragmentList.add(fragment);
-            //add title passed as parameter in fragmentTitleList
             fragmentTitleList.add(title);
         }
 
@@ -163,16 +172,16 @@ public class DashboardUserActivity extends AppCompatActivity {
             return fragmentTitleList.get(position);
         }
     }
+
     private void checkUser() {
-        //get current user
+        // Lấy người dùng hiện tại từ Firebase Auth
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null) {
-            //not logged in
+            // Nếu người dùng chưa đăng nhập, hiển thị "Not Logged in"
             binding.subTitleTv.setText("Not Logged in");
         } else {
-            //logged in, get user info
+            // Nếu người dùng đã đăng nhập, hiển thị email
             String email = firebaseUser.getEmail();
-            //set in textview of toolbar
             binding.subTitleTv.setText(email);
         }
     }

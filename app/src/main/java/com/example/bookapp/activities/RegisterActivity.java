@@ -22,26 +22,32 @@ import java.util.HashMap;
 
 
 public class RegisterActivity extends AppCompatActivity {
+    //Khai báo biến binding kiểu ActivityRegisterBinding để sử dụng View Binding
     private ActivityRegisterBinding binding;
 
+    // Khai báo biến firebaseAuth kiểu FirebaseAuth để xác thực người dùng
     private FirebaseAuth firebaseAuth;
 
+    // Khai báo biến progressDialog để hiển thị hộp thoại tiến trình
     private ProgressDialog progressDialog;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Sử dụng View Binding để thiết lập giao diện
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        //Lấy instance của FirebaseAuth
         firebaseAuth = firebaseAuth.getInstance();
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
+        // Không cho phép hủy hộp thoại khi chạm ra ngoài
         progressDialog.setCanceledOnTouchOutside(false);
 
-        //handle click, go back
+        //Xử lý sự kiện khi bấm vào nút backBtn, quay lại màn hình trước
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,7 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, begin register
+        // Xử lý sự kiện khi bấm vào nút registerBtn, bắt đầu quá trình đăng ký
         binding.registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,15 +66,15 @@ public class RegisterActivity extends AppCompatActivity {
 
     private String name="", email ="", password="";
     private void validateData() {
-        /*Before creating account, lets do some data validation*/
+        /* Trước khi tạo tài khoản, kiểm tra dữ liệu */
 
-        //get data
+        // Lấy dữ liệu từ các EditText
         name = binding.nameEt.getText().toString().trim();
         email = binding.emailEt.getText().toString().trim();
         password = binding.passwordEt.getText().toString().trim();
         String cPassword = binding.cPasswordEt.getText().toString().trim();
 
-        //validate data
+        // Kiểm tra dữ liệu
         if (TextUtils.isEmpty (name)) {
             Toast.makeText(this,"Enter you name...", Toast.LENGTH_SHORT).show();
         }
@@ -85,68 +91,70 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(this, "Password doesn't match...!", Toast.LENGTH_SHORT).show();
         }
         else{
+            // Nếu dữ liệu hợp lệ, gọi phương thức createUserAccount để tạo tài khoản
             createUserAccount();
         }
     }
 
     private void createUserAccount() {
-        //show progress
+        // Hiển thị hộp thoại tiến trình
         progressDialog.setMessage("Creating account...");
         progressDialog.show();
 
-        //create user in firebase auth
+        // Tạo người dùng trong Firebase Auth
         firebaseAuth.createUserWithEmailAndPassword (email, password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess (AuthResult authResult) {
-                            //account creation success, now add in firebase realtime database
-                            updateUserInfo();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(Exception e) {
-                            //account creating failed
-                            progressDialog.dismiss();
-                            Toast.makeText(RegisterActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                        // Khi tạo tài khoản thành công, thêm thông tin người dùng vào Firebase Realtime Database
+                        updateUserInfo();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        // Khi tạo tài khoản thất bại
+                        progressDialog.dismiss();
+                        Toast.makeText(RegisterActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
 
     }
     private void updateUserInfo() {
+        // Cập nhật thông điệp của hộp thoại tiến trình
         progressDialog.setMessage("Saving user info...");
-        //timestamp
+        // Lấy thời gian hiện tại
         long timestamp = System.currentTimeMillis();
-        //get current user uid, since user is registered so we can get now
+        // Lấy UID của người dùng hiện tại
         String uid = firebaseAuth.getUid();
 
-        //setup data to add in db
+        // Tạo dữ liệu để thêm vào cơ sở dữ liệu
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("uid", uid);
         hashMap.put("email", email);
         hashMap.put("name", name);
-        hashMap.put("profileImage", ""); //add empty, will do later
-        hashMap.put("userType", "user"); //possible values are user, admin: will make admin manually in firebase realtime database by changing this value
+        hashMap.put("profileImage", ""); // Để trống, sẽ thêm sau
+        hashMap.put("userType", "user"); // Giá trị có thể là user hoặc admin; sẽ thêm admin thủ công trong Firebase Realtime Database
         hashMap.put("timestamp", timestamp);
 
-        //set data to db
+        // Thêm dữ liệu vào cơ sở dữ liệu
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
         ref.child(uid)
                 .setValue(hashMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        //data added to db
+                        // Khi dữ liệu được thêm thành công vào cơ sở dữ liệu
                         progressDialog.dismiss();
                         Toast.makeText(RegisterActivity.this, "Account create...", Toast.LENGTH_SHORT).show();
-                        //since user account is created so start dashboard of user
+                        // Bắt đầu DashboardUserActivity
                         startActivity(new Intent(RegisterActivity.this, DashboardUserActivity.class));
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(Exception e) {
-                        //data failed adding to db
+                        // Khi thêm dữ liệu vào cơ sở dữ liệu thất bại
                         progressDialog.dismiss();
                         Toast.makeText(RegisterActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }

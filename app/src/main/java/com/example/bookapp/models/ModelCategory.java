@@ -1,15 +1,17 @@
 package com.example.bookapp.models;
 
 public class ModelCategory {
-    String id, category, uid;
-    long timestamp;
+    String id; // Mã định danh duy nhất của danh mục
+    String category; // Tên của danh mục
+    String uid; // Mã định danh của người dùng tạo ra danh mục
+    long timestamp; // Thời gian tạo danh mục (theo số mili giây kể từ 1/1/1970)
 
-    //constructor empty require for firebase
-
+    // Hàm khởi tạo không tham số
     public ModelCategory(){
 
     }
-    //parametrized constructor
+
+    // Hàm khởi tạo với tất cả các thuộc tính
     public ModelCategory(String id,String category, String uid, long timestamp){
         this.id = id;
         this.category= category;
@@ -17,8 +19,7 @@ public class ModelCategory {
         this.timestamp = timestamp;
     }
 
-    /*----Getter/Setter-----*/
-
+    // Các phương thức getter và setter cho các thuộc tính
     public String getId() {
         return id;
     }
