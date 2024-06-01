@@ -20,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
+// Phan Thị Ngọc Mai - 21110238
 public class CategoryAddActivity extends AppCompatActivity {
 
     private ActivityCategoryAddBinding binding;

@@ -7,6 +7,7 @@ import com.example.bookapp.models.ModelPdf;
 
 import java.util.ArrayList;
 
+// Phan Thị Ngọc Mai - 21110238
 public class FilterPdfUser extends Filter {
     ArrayList<ModelPdf> filterList; // Danh sách các sách PDF cần lọc
     AdapterPdfUser adapterPdfUser; // Adapter hiển thị danh sách các sách PDF cho người dùng

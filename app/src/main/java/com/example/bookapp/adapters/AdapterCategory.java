@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
+// Phan Thị Ngọc Mai - 21110238
 public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.HolderCategory> implements Filterable {
     private Context context;
     //Danh sách các danh mục hiển thị và danh sách các danh mục dùng để lọc

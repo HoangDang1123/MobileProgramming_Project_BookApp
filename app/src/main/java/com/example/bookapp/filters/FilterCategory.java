@@ -7,6 +7,7 @@ import com.example.bookapp.models.ModelCategory;
 
 import java.util.ArrayList;
 
+// Phan Thị Ngọc Mai - 21110238
 public class FilterCategory extends Filter {
     ArrayList<ModelCategory> filterList; // Danh sách các danh mục sách cần lọc
     AdapterCategory adapterCategory; // Adapter hiển thị danh sách các danh mục sách

@@ -25,6 +25,7 @@ import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 
+// Phan Thị Ngọc Mai - 21110238
 public class AdapterPdfUser extends RecyclerView.Adapter<AdapterPdfUser.HolderPdfUser> implements Filterable {
     private Context context;
     public ArrayList<ModelPdf> pdfArrayList, filterList;

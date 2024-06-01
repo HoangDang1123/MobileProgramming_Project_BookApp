@@ -27,6 +27,7 @@ import com.github.barteksc.pdfviewer.PDFView;
 
 import java.util.ArrayList;
 
+// Phan Thị Ngọc Mai - 21110238
 public class AdapterPdfAdmin extends RecyclerView.Adapter<AdapterPdfAdmin.HolderPdfAdmin> implements Filterable {
 
     //context

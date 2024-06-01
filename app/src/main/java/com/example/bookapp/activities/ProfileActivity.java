@@ -31,6 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+// Đào Hoàng Đăng - 21110163
 public class ProfileActivity extends AppCompatActivity {
     private ActivityProfileBinding binding; // Binding đối tượng giao diện người dùng
 

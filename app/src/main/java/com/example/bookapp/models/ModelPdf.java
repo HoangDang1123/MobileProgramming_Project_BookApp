@@ -1,5 +1,6 @@
 package com.example.bookapp.models;
 
+// Phan Thị Ngọc Mai - 21110238
 public class ModelPdf {
     String uid; // Mã định danh của người dùng tải lên tài liệu PDF
     String id; // Mã định danh duy nhất của tài liệu PDF

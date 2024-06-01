@@ -20,7 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
-
+// Phan Thị Ngọc Mai - 21110238
 public class RegisterActivity extends AppCompatActivity {
     //Khai báo biến binding kiểu ActivityRegisterBinding để sử dụng View Binding
     private ActivityRegisterBinding binding;

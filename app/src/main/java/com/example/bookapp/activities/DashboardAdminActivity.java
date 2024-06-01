@@ -51,6 +51,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
         //Tải danh mục từ Firebase
         loadCategories();
 
+        // Phan Thị Ngọc Mai - 21110238
         // Thiết lập sự kiện cho ô tìm kiếm
         binding.searchEt.addTextChangedListener(new TextWatcher(){
             @Override
@@ -73,6 +74,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
             }
 
         });
+        // Phan Thị Ngọc Mai - 21110238
         //Xử lý sự kiện click cho nút đăng xuất
         binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +84,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
             }
         });
 
+        // Phan Thị Ngọc Mai - 21110238
         //Xử lý sự kiện click cho nút
         binding.addCategoryBtn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -90,6 +93,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
             }
         });
 
+        // Phan Thị Ngọc Mai - 21110238
         //Xử lý sự kiện click cho nút thêm PDF
         binding.addPdfFab.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -98,6 +102,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
             }
         });
 
+        // Đào Hoàng Đăng - 21110163
         //Xử lý sự kiện click cho nút xem hồ sơ
         binding.profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +112,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
         });
     }
 
+    // Phan Thị Ngọc Mai - 21110238
     //Phương thức tải danh mục từ Firebase
     private void loadCategories() {
         //Khởi tạo danh sách danh mục
@@ -141,6 +147,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
 
     }
 
+    // Phan Thị Ngọc Mai - 21110238
     //Phương thức kiểm tra người dùng hiện tại
     private void checkUser() {
         //Lấy người dùng hiện tại

@@ -60,6 +60,7 @@ public class MyApplication extends Application {
         return date;
     }
 
+    // Phan Thị Ngọc Mai - 21110238
     // Phương thức xóa sách từ Firebase Storage và Firebase Database
     public static void deleteBook(Context context, String bookId, String bookUrl, String bookTitle) {
         String TAG = "DELETE_BOOK_TAG";
@@ -111,6 +112,7 @@ public class MyApplication extends Application {
                 });
     }
 
+    // Phan Thị Ngọc Mai - 21110238 & Đào Hoàng Đăng - 21110163
     // Phương thức tải kích thước của file PDF từ Firebase Storage
     public static void loadPdfSize(String pdfUrl, String pdfTitle, TextView sizeTv) {
         String TAG = "PDF_SIZE_TAG";
@@ -143,6 +145,7 @@ public class MyApplication extends Application {
                 });
     }
 
+    // Đào Hoàng Đăng
     // Phương thức tải một trang đơn từ file PDF từ Firebase Storage
     public static void loadPdfFromUrlSinglePage(String pdfUrl, String pdfTitle, PDFView pdfView, ProgressBar progressBar, TextView pagesTv) {
         String TAG = "PDF_LOAD_SINGLE_TAG";
@@ -198,6 +201,7 @@ public class MyApplication extends Application {
                 });
     }
 
+    // Phan Thị Ngọc Mai - 21110238
     // Phương thức tải tên danh mục từ Firebase Database
     public static void loadCategory(String categoryId, TextView categoryTv) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Categories");
@@ -217,6 +221,7 @@ public class MyApplication extends Application {
                 });
     }
 
+    // Đào Hoàng Đăng - 21110163
     // Phương thức tăng số lượng lượt xem của sách
     public static void incrementBookViewCount(String bookId) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
@@ -246,6 +251,7 @@ public class MyApplication extends Application {
                 });
     }
 
+    // Đào Hoàng Đăng - 21110163
     // Phương thức tải sách từ Firebase Storage và lưu vào thiết bị
     public static void downloadBook(Context context, String bookId, String bookTitle, String bookUrl) {
         Log.d(TAG_DOWNLOAD, "downloadBook: downloading book... ");
@@ -278,6 +284,7 @@ public class MyApplication extends Application {
                 });
     }
 
+    // Đào Hoàng Đăng - 21110163
     // Hàm này dùng để lưu trữ cuốn sách đã tải xuống
     private static void saveDownloadedBook(Context context, ProgressDialog progressDialog, byte[] bytes, String nameWithExtension, String bookId) {
         Log.d(TAG_DOWNLOAD, "saveDownloadedBook: Saving downloaded book");
@@ -310,6 +317,7 @@ public class MyApplication extends Application {
         }
     }
 
+    // Đào Hoàng Đăng - 21110163
     // Hàm này dùng để tăng số lần tải sách lên
     private static void incrementBookDownloadCount(String bookId) {
         Log.d(TAG_DOWNLOAD, "incrementBookDownloadCount: Incrementing Book Download Count");
@@ -358,6 +366,7 @@ public class MyApplication extends Application {
                 });
     }
 
+    // Đào Hoàng Đăng - 21110163
     // Hàm này dùng để tải số trang của một cuốn sách từ Firebase Storage
     public static void loadPdfPageCount (Context context, String pdfUrl, TextView pagesTv) {
         // Lấy tệp PDF từ Firebase Storage
@@ -388,6 +397,7 @@ public class MyApplication extends Application {
                 });
     }
 
+    // Đào Hoàng Đăng - 21110163
     // Hàm này dùng để thêm sách vào danh sách yêu thích
     public static void addToFavorite(Context context, String bookId) {
         // Chỉ có thể thêm nếu người dùng đã đăng nhập
@@ -423,6 +433,7 @@ public class MyApplication extends Application {
         }
     }
 
+    // Đào Hoàng Đăng - 21110163
     // Hàm này dùng để xóa sách khỏi danh sách yêu thích
     public static void removeFromFavorite (Context context, String bookId) {
         // Chỉ có thể xóa nếu người dùng đã đăng nhập

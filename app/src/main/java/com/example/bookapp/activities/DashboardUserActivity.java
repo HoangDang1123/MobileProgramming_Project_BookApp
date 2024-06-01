@@ -54,6 +54,7 @@ public class DashboardUserActivity extends AppCompatActivity {
         // Liên kết TabLayout và ViewPager
         binding.tabLayout.setupWithViewPager(binding.viewPager);
 
+        // Phan Thị Ngọc Mai - 21110238
         // Xử lý sự kiện click logout
         binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +68,7 @@ public class DashboardUserActivity extends AppCompatActivity {
             }
         });
 
+        // Đào Hoàng Đăng - 21110163
         // Xử lý sự kiện click profile
         binding.profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,6 +79,7 @@ public class DashboardUserActivity extends AppCompatActivity {
         });
     }
 
+    // Phan Thị Ngọc Mai - 21110238
     private void setupViewPagerAdapter(ViewPager viewPager) {
         // Khởi tạo ViewPagerAdapter
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, this);
@@ -140,6 +143,7 @@ public class DashboardUserActivity extends AppCompatActivity {
         viewPager.setAdapter(viewPagerAdapter);
     }
 
+    // Phan Thị Ngọc Mai - 21110238
     // Lớp ViewPagerAdapter để quản lý các Fragment
     public class ViewPagerAdapter extends FragmentPagerAdapter {
 
@@ -173,6 +177,7 @@ public class DashboardUserActivity extends AppCompatActivity {
         }
     }
 
+    // Phan Thị Ngọc Mai - 21110238
     private void checkUser() {
         // Lấy người dùng hiện tại từ Firebase Auth
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();

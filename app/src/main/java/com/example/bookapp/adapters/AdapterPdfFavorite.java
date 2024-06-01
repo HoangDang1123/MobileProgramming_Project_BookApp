@@ -28,6 +28,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 
+// Đào Hoàng Đăng - 21110163
 public class AdapterPdfFavorite extends RecyclerView.Adapter<AdapterPdfFavorite.HolderPdfFavorite>{
     private Context context;
     private ArrayList<ModelPdf> pdfArrayList;

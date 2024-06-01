@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+// Đào Hoàng Đăng - 21110163
 public class SplashActivity extends AppCompatActivity {
 
     //Khai báo biến firebaseAuth kiểu FirebaseAuth để xác thực người dùng

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bookapp.databinding.ActivityMainBinding;
 
+// Phan Thị Ngọc Mai - 21110238
 public class MainActivity extends AppCompatActivity {
 
     //Khai báo biến binding kiểu ActivityMainBinding để sử dụng View Binding
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         binding.skipBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, DashboardUserActivity.class));
+                startActivity(new Intent(MainActivity.this, RegisterActivity.class));
             }
         });
     }

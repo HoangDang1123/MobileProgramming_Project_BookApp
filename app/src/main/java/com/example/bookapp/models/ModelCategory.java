@@ -1,5 +1,6 @@
 package com.example.bookapp.models;
 
+// Phan Thị Ngọc Mai - 21110238
 public class ModelCategory {
     String id; // Mã định danh duy nhất của danh mục
     String category; // Tên của danh mục

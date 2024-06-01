@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+// Phan Thị Ngọc Mai - 21110238
 public class LoginActivity extends AppCompatActivity {
 
     // Khai báo biến binding kiểu ActivityLoginBinding để sử dụng View Binding

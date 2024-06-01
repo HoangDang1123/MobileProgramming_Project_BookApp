@@ -58,88 +58,100 @@
 
     </RelativeLayout>
 
-    <!-- Phần nhập tiêu đề sách -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/titleTil"
+    <ScrollView
+        android:layout_marginTop="255dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginTop="225dp"
-        app:hintEnabled="false">
+        android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/titleEt"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <!-- Phần nhập tiêu đề sách -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/titleTil"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_edittext01"
-            android:drawableStart="@drawable/ic_pdf_white"
-            android:drawablePadding="10dp"
-            android:hint="Book Title"
-            android:inputType="textPersonName|textCapWords"
-            android:padding="10dp"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textColorHint="@color/gray01"/>
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            app:hintEnabled="false">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <EditText
+                android:id="@+id/titleEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_edittext01"
+                android:drawableStart="@drawable/ic_pdf_white"
+                android:drawablePadding="10dp"
+                android:hint="Book Title"
+                android:inputType="textPersonName|textCapWords"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textColorHint="@color/gray01"/>
 
-    <!-- Phần nhập mô tả sách -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/descriptionTil"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_below="@id/titleTil"
-        android:layout_marginTop="5dp"
-        app:hintEnabled="false">
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/descriptionEt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shape_edittext01"
-            android:drawableStart="@drawable/ic_pdf_white"
-            android:drawablePadding="10dp"
-            android:hint="Book Description"
-            android:inputType="textMultiLine|textCapSentences"
-            android:padding="10dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/gray01"/>
+            <!-- Phần nhập mô tả sách -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/descriptionTil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_below="@id/titleTil"
+                android:layout_marginTop="5dp"
+                app:hintEnabled="false">
 
-    </com.google.android.material.textfield.TextInputLayout>
+                <EditText
+                    android:id="@+id/descriptionEt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_edittext01"
+                    android:drawableStart="@drawable/ic_pdf_white"
+                    android:drawablePadding="10dp"
+                    android:hint="Book Description"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:padding="10dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray01"/>
 
-    <!-- Phần hiển thị danh mục sách -->
-    <TextView
-        android:id="@+id/categoryTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/descriptionTil"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/shape_edittext01"
-        android:drawableStart="@drawable/ic_category_gray"
-        android:drawableEnd="@drawable/ic_down_gray"
-        android:drawablePadding="10dp"
-        android:gravity="center_vertical"
-        android:hint="Book Category"
-        android:padding="10dp"
-        android:textColorHint="@color/gray01"
-        android:textColor="@color/black"
-        android:textSize="16sp"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Nút tải lên sách -->
-    <Button
-        android:id="@+id/submitBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/categoryTv"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginTop="10dp"
-        android:text="Upload"
-        android:textColor="@color/white"/>
+            <!-- Phần hiển thị danh mục sách -->
+            <TextView
+                android:id="@+id/categoryTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/descriptionTil"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/shape_edittext01"
+                android:drawableStart="@drawable/ic_category_gray"
+                android:drawableEnd="@drawable/ic_down_gray"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:hint="Book Category"
+                android:padding="10dp"
+                android:textColorHint="@color/gray01"
+                android:textColor="@color/black"
+                android:textSize="16sp"/>
+
+            <!-- Nút tải lên sách -->
+            <Button
+                android:id="@+id/submitBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/categoryTv"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginTop="10dp"
+                android:text="Upload"
+                android:textColor="@color/white"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 </RelativeLayout>

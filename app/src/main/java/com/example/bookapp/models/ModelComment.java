@@ -1,5 +1,6 @@
 package com.example.bookapp.models;
 
+// Đào Hoàng Đăng - 21110163
 public class ModelComment {
     String id; // Mã định danh duy nhất của bình luận
     String bookId; // Mã định danh của quyển sách được bình luận

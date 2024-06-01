@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+// Phan Thị Ngọc Mai - 21110238
 public class ForgotPasswordActivity extends AppCompatActivity {
     // Khai báo biến dùng View Binding
     private ActivityForgotPasswordBinding binding;

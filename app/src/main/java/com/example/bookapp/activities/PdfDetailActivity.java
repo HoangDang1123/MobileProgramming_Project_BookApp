@@ -38,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+// Đào Hoàng Đăng - 21110163
 public class PdfDetailActivity extends AppCompatActivity {
 
     // Khai báo các biến cần thiết
@@ -280,7 +281,7 @@ public class PdfDetailActivity extends AppCompatActivity {
                         // Đọc các thuộc tính của cuốn sách
                         bookTitle =""+snapshot.child("title").getValue();
                         String description = ""+snapshot.child("description").getValue();
-                        String categoryTitle =""+snapshot.child("categoryTitle").getValue();
+                        String categoryId =""+snapshot.child("categoryId").getValue();
                         String viewsCount =""+snapshot.child("viewsCount").getValue();
                         String downloadsCount =""+snapshot.child("downloadsCount").getValue();
                         bookUrl =""+snapshot.child("url").getValue();
@@ -293,7 +294,7 @@ public class PdfDetailActivity extends AppCompatActivity {
                         String date = MyApplication.formatTimestamp(Long.parseLong(timestamp));
 
                         // Hiển thị các thông tin khác của cuốn sách
-                        MyApplication.loadCategory(""+categoryTitle, binding.categoryTv);
+                        MyApplication.loadCategory(""+categoryId, binding.categoryTv);
                         MyApplication.loadPdfFromUrlSinglePage(""+bookUrl, ""+bookTitle, binding.pdfView, binding.progressBar, null);
                         MyApplication.loadPdfSize(""+bookUrl, ""+bookTitle, binding.sizeTv);
                         MyApplication.loadPdfPageCount(PdfDetailActivity.this, ""+bookUrl, binding.pagesTv);
